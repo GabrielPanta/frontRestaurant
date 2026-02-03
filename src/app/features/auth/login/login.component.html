@@ -1,0 +1,15 @@
+<div class="login-container">
+  <form class="login-card" [formGroup]="form" (ngSubmit)="submit()">
+    <h2>Sistema Restaurante</h2>
+    <p class="subtitle">Inicia sesión para continuar</p>
+
+    <input type="email" placeholder="Correo electrónico" formControlName="email">
+    <input type="password" placeholder="Contraseña" formControlName="password">
+
+    <button type="submit">Ingresar</button>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+  </form>
+</div>
+
+

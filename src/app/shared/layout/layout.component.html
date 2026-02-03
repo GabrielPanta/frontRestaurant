@@ -1,0 +1,30 @@
+<div class="layout">
+  <aside class="sidebar">
+    <h3>Restaurante</h3>
+
+    <a *ngIf="role==='ADMIN'" routerLink="/admin">Panel Admin</a>
+    <a *ngIf="role==='ADMIN'" routerLink="/admin/usuarios">Usuarios</a>
+
+    <a *ngIf="role==='MOZO'" routerLink="/mozo">Tomar Pedido</a>
+    <a *ngIf="role==='COCINA'" routerLink="/cocina">Pedidos Cocina</a>
+    <a *ngIf="role==='CAJERO'" routerLink="/cajero">Caja</a>
+
+    <a routerLink="/pedidos">Pedidos</a>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        Bienvenido {{ email }}
+        <span class="role-badge">{{ role }}</span>
+      </div>
+      <button (click)="logout()">Cerrar sesión</button>
+    </header>
+
+    <section class="content">
+      <router-outlet></router-outlet>
+    </section>
+  </div>
+</div>
+
+
