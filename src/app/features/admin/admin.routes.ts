@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { MenuAdminComponent } from './menu-admin/menu-admin.component';
 
 @Component({
   standalone: true,
-   template: `
+  template: `
     <div class="card">
       <h2>Panel Administrador</h2>
       <p>Desde aquí podrás gestionar usuarios, platos y configuraciones del sistema.</p>
@@ -19,8 +19,10 @@ import { Component } from '@angular/core';
     }
   `]
 })
-class AdminHomeComponent {}
+export class AdminHomeComponent {}
 
 export const ADMIN_ROUTES: Routes = [
-  { path: '', component: AdminHomeComponent }
+  { path: '', component: AdminHomeComponent },
+  { path: 'menu', component: MenuAdminComponent }
 ];
+

@@ -1,0 +1,48 @@
+<div class="card">
+  <h2>Gestión de Platos del Menú</h2>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="form-grid">
+    <input type="text" placeholder="Nombre del plato" formControlName="nombre">
+    <input type="number" placeholder="Precio" formControlName="precio">
+
+    <label class="checkbox">
+      <input type="checkbox" formControlName="disponible">
+      Disponible para la venta
+    </label>
+
+    <div class="buttons">
+      <button type="submit">
+        {{ editando ? 'Actualizar Plato' : 'Registrar Plato' }}
+      </button>
+      <button type="button" *ngIf="editando" (click)="cancelar()">Cancelar</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <h3>Platos registrados</h3>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Disponible</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items">
+        <td>{{ item.nombre }}</td>
+        <td>S/ {{ item.precio | number:'1.2-2' }}</td>
+        <td>{{ item.disponible ? 'Sí' : 'No' }}</td>
+        <td>
+          <button (click)="editar(item)">Editar</button>
+          <button (click)="eliminar(item.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
