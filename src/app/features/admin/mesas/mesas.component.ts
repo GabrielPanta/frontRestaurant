@@ -40,13 +40,25 @@ export class MesasComponent implements OnInit {
   }
 
   crearMesa() {
-    if (!this.nuevaMesa.numero) return;
+  if (!this.nuevaMesa.numero) return;
 
-    this.mesaService.crear(this.nuevaMesa).subscribe(() => {
+  const existe = this.mesas.some(m => m.numero === this.nuevaMesa.numero);
+  if (existe) {
+    alert('Ya existe una mesa con ese número');
+    return;
+  }
+
+  this.mesaService.crear(this.nuevaMesa).subscribe({
+    next: () => {
       this.nuevaMesa.numero = 0;
       this.cargarMesas();
-    });
-  }
+    },
+    error: err => {
+      alert(err.error?.message || 'Error al crear mesa');
+    }
+  });
+}
+
 
   cambiarEstado(mesa: Mesa, estado: string) {
     this.mesaService.cambiarEstado(mesa.id, estado)
