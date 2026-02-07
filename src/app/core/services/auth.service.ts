@@ -40,4 +40,10 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+  
+  isAdmin(): boolean {
+  return localStorage.getItem('role') === 'ADMIN';
+}
+
+
 }
