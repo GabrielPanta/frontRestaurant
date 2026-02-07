@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Component } from '@angular/core';
 import { MenuAdminComponent } from './menu-admin/menu-admin.component';
+import { MesasComponent } from './mesas/mesas.component';
 
 @Component({
   standalone: true,
@@ -23,6 +24,8 @@ export class AdminHomeComponent {}
 
 export const ADMIN_ROUTES: Routes = [
   { path: '', component: AdminHomeComponent },
-  { path: 'menu', component: MenuAdminComponent }
+  { path: 'menu', component: MenuAdminComponent },
+  { path: 'mesas', component:MesasComponent }
+
 ];
 

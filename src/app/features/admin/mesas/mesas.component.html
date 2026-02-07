@@ -1,0 +1,16 @@
+<div class="mesas-container">
+  <h2>Gestión de Mesas</h2>
+
+  <div class="grid">
+    <div class="mesa-card" *ngFor="let mesa of mesas" [ngClass]="mesa.estado">
+      <h3>Mesa {{ mesa.numero }}</h3>
+      <p class="estado">{{ mesa.estado }}</p>
+
+      <div class="acciones">
+        <button (click)="cambiarEstado(mesa, 'LIBRE')">Libre</button>
+        <button (click)="cambiarEstado(mesa, 'OCUPADA')">Ocupada</button>
+        <button (click)="cambiarEstado(mesa, 'RESERVADA')">Reservada</button>
+      </div>
+    </div>
+  </div>
+</div>
