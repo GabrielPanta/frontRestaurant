@@ -23,9 +23,15 @@
       <p class="estado">{{ mesa.estado }}</p>
 
       <div class="acciones">
-        <button (click)="cambiarEstado(mesa, 'LIBRE')">Libre</button>
-        <button (click)="cambiarEstado(mesa, 'OCUPADA')">Ocupada</button>
-        <button (click)="cambiarEstado(mesa, 'RESERVADA')">Reservada</button>
+        <button *ngIf="mesa.estado !== 'LIBRE'" (click)="cambiarEstado(mesa, 'LIBRE')">
+          Marcar libre
+        </button>
+        <button *ngIf="mesa.estado !== 'OCUPADA'" (click)="cambiarEstado(mesa, 'OCUPADA')">
+          Ocupar
+        </button>
+        <button *ngIf="mesa.estado !== 'RESERVADA'" (click)="cambiarEstado(mesa, 'RESERVADA')">
+          Reservar
+        </button>
         <button class="btn-eliminar" *ngIf="esAdmin" (click)="eliminarMesa(mesa.id)">
           Eliminar
         </button>
