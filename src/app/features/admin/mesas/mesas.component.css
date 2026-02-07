@@ -97,3 +97,18 @@ button:hover {
 .form-card button:hover {
   opacity: 0.9;
 }
+
+.btn-eliminar {
+  margin-top: 8px;
+  padding: 6px;
+  background: #e53935;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-eliminar:hover {
+  opacity: 0.9;
+}
+

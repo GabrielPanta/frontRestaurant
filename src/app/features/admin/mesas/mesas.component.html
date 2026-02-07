@@ -26,6 +26,10 @@
         <button (click)="cambiarEstado(mesa, 'LIBRE')">Libre</button>
         <button (click)="cambiarEstado(mesa, 'OCUPADA')">Ocupada</button>
         <button (click)="cambiarEstado(mesa, 'RESERVADA')">Reservada</button>
+        <button class="btn-eliminar" *ngIf="esAdmin" (click)="eliminarMesa(mesa.id)">
+          Eliminar
+        </button>
+
       </div>
     </div>
   </div>
