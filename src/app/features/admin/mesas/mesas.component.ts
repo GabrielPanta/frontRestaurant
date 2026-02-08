@@ -86,50 +86,46 @@ export class MesasComponent implements OnInit {
   }
 
   seleccionarMesa(mesa: Mesa) {
-  this.pedidoActivo = null;
-  this.platos = [];
-  this.itemsPedido = [];
+    this.pedidoActivo = null;
+    this.platos = [];
+    this.itemsPedido = [];
 
-  this.pedidoService.obtenerPedidoActivoPorMesa(mesa.id)
-    .subscribe({
-      next: pedido => {
-        if (pedido) {
-          this.pedidoActivo = pedido;
-          this.cargarPlatos();
-          this.cargarItemsPedido();
-        } else {
-          this.crearPedidoParaMesa(mesa);
+    this.pedidoService.obtenerPedidoActivoPorMesa(mesa.id)
+      .subscribe({
+        next: pedido => {
+          if (pedido) {
+            this.pedidoActivo = pedido;
+            this.cargarPlatos();
+            this.cargarItemsPedido();
+          } else {
+            this.crearPedidoParaMesa(mesa);
+          }
         }
-      }
-    });
-}
-
-
-
+      });
+  }
 
   crearPedidoParaMesa(mesa: Mesa) {
-  this.pedidoService.crearPedido(mesa.id)
-    .subscribe(pedido => {
-      this.pedidoActivo = pedido;
-      this.cargarPlatos();
-      this.cargarItemsPedido();
-    });
-}
-
+    this.pedidoService.crearPedido(mesa.id)
+      .subscribe(pedido => {
+        this.pedidoActivo = pedido;
+        this.cargarPlatos();
+        this.cargarItemsPedido();
+      });
+  }
 
   cargarPlatos() {
-  console.log('Cargando platos...');
-  this.menuService.listarDisponibles()
-    .subscribe({
-      next: data => {
-        console.log('Platos recibidos:', data);
-        this.platos = data;
-      },
-      error: err => {
-        console.error('Error cargando platos', err);
-      }
-    });
-}
+    console.log('Cargando platos...');
+    this.menuService.listarDisponibles()
+      .subscribe({
+        next: data => {
+          console.log('Platos recibidos:', data);
+          this.platos = data;
+        },
+        error: err => {
+          console.error('Error cargando platos', err);
+        }
+      });
+  }
 
   agregarPlato(plato: any) {
     if (!this.pedidoActivo) return;
@@ -150,22 +146,20 @@ export class MesasComponent implements OnInit {
   }
 
   cargarItemsPedido() {
-  if (!this.pedidoActivo) return;
+    if (!this.pedidoActivo) return;
 
-  this.pedidoService.listarItems(this.pedidoActivo.id)
-    .subscribe({
-      next: items => {
-        this.itemsPedido = items;
-      },
-      error: err => {
-        console.error('Error cargando items', err);
-      }
-    });
-}
-
-
-
+    this.pedidoService.listarItems(this.pedidoActivo.id)
+      .subscribe({
+        next: items => {
+          this.itemsPedido = items;
+        },
+        error: err => {
+          console.error('Error cargando items', err);
+        }
+      });
   }
+
+}
 
 
 
