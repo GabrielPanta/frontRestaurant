@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { PedidoService } from '../../../core/services/pedido.service';
 import { Pedido } from '../../../core/models/pedido.model';
+import { MenuItemService } from '../../../core/services/menu-item.service';
 
 
 
@@ -18,6 +19,10 @@ import { Pedido } from '../../../core/models/pedido.model';
 export class MesasComponent implements OnInit {
 
   mesas: Mesa[] = [];
+  pedidoActivo: any = null;
+  platos: any[] = [];
+  itemsPedido: any[] = [];
+
 
   nuevaMesa: Partial<Mesa> = {
     numero: 0,
@@ -29,8 +34,8 @@ export class MesasComponent implements OnInit {
   constructor(
     private mesaService: MesaService,
     private authService: AuthService,
-    private pedidoService: PedidoService
-
+    private pedidoService: PedidoService,
+    private menuService: MenuItemService
   ) { }
 
   ngOnInit(): void {
@@ -81,33 +86,82 @@ export class MesasComponent implements OnInit {
   }
 
   seleccionarMesa(mesa: Mesa) {
-    this.pedidoService.obtenerPedidoActivoPorMesa(mesa.id)
-      .subscribe({
-        next: pedido => {
-          if (pedido) {
-            console.log('Continuar pedido existente', pedido);
-          } else {
-            this.crearPedidoParaMesa(mesa);
-          }
-        },
-        error: err => {
-          console.error('Error consultando pedido', err);
+  this.pedidoActivo = null;
+  this.platos = [];
+  this.itemsPedido = [];
+
+  this.pedidoService.obtenerPedidoActivoPorMesa(mesa.id)
+    .subscribe({
+      next: pedido => {
+        if (pedido) {
+          this.pedidoActivo = pedido;
+          this.cargarPlatos();
+          this.cargarItemsPedido();
+        } else {
+          this.crearPedidoParaMesa(mesa);
         }
-      });
-  }
+      }
+    });
+}
+
+
+
 
   crearPedidoParaMesa(mesa: Mesa) {
-    this.pedidoService.crearPedido(mesa.id)
-      .subscribe({
-        next: pedido => {
-          console.log('Pedido creado', pedido);
-          mesa.estado = 'OCUPADA';
-        },
-        error: err => {
-          console.error('Error creando pedido', err);
-        }
-      });
+  this.pedidoService.crearPedido(mesa.id)
+    .subscribe(pedido => {
+      this.pedidoActivo = pedido;
+      this.cargarPlatos();
+      this.cargarItemsPedido();
+    });
+}
+
+
+  cargarPlatos() {
+  console.log('Cargando platos...');
+  this.menuService.listarDisponibles()
+    .subscribe({
+      next: data => {
+        console.log('Platos recibidos:', data);
+        this.platos = data;
+      },
+      error: err => {
+        console.error('Error cargando platos', err);
+      }
+    });
+}
+
+  agregarPlato(plato: any) {
+    if (!this.pedidoActivo) return;
+
+    this.pedidoService.agregarItem(
+      this.pedidoActivo.id,
+      plato.id,
+      1
+    ).subscribe({
+      next: () => {
+        console.log('Plato agregado');
+        this.cargarItemsPedido();
+      },
+      error: err => {
+        console.error('Error agregando plato', err);
+      }
+    });
   }
+
+  cargarItemsPedido() {
+  if (!this.pedidoActivo) return;
+
+  this.pedidoService.listarItems(this.pedidoActivo.id)
+    .subscribe({
+      next: items => {
+        this.itemsPedido = items;
+      },
+      error: err => {
+        console.error('Error cargando items', err);
+      }
+    });
+}
 
 
 

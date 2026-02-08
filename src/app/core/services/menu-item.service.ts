@@ -25,4 +25,8 @@ export class MenuItemService {
   eliminar(id: number) {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+  listarDisponibles() {
+    return this.http.get<any[]>(`${this.apiUrl}/disponibles`);
+  }
 }

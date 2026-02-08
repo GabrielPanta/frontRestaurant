@@ -17,11 +17,22 @@ export class PedidoService {
   }
 
   crearPedido(mesaId: number) {
-  return this.http.post<any>(this.apiUrl, {
-    mesaId,
-    items: []
-  });
-}
+    return this.http.post<any>(this.apiUrl, {
+      mesaId,
+      items: []
+    });
+  }
+
+  listarItems(pedidoId: number) {
+    return this.http.get<any[]>(`${this.apiUrl}/${pedidoId}/items`);
+  }
+
+  agregarItem(pedidoId: number, menuItemId: number, cantidad: number) {
+    return this.http.post(
+      `${this.apiUrl}/${pedidoId}/items`,
+      { menuItemId, cantidad }
+    );
+  }
 
 }
 
