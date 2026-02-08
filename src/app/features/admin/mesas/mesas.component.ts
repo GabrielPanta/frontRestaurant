@@ -4,6 +4,10 @@ import { MesaService } from '../../../core/services/mesa.service';
 import { Mesa } from '../../../core/models/mesa.model';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
+import { PedidoService } from '../../../core/services/pedido.service';
+import { Pedido } from '../../../core/models/pedido.model';
+
+
 
 @Component({
   standalone: true,
@@ -24,7 +28,8 @@ export class MesasComponent implements OnInit {
 
   constructor(
     private mesaService: MesaService,
-    private authService: AuthService
+    private authService: AuthService,
+    private pedidoService: PedidoService
 
   ) { }
 
@@ -75,4 +80,23 @@ export class MesasComponent implements OnInit {
     });
   }
 
+ seleccionarMesa(mesa: Mesa) {
+  this.pedidoService.obtenerPedidoActivoPorMesa(mesa.id)
+    .subscribe({
+      next: (pedido: Pedido | null) => {
+        if (pedido) {
+          console.log('Pedido activo encontrado', pedido);
+        } else {
+          console.log('No hay pedido activo, se puede crear uno nuevo');
+        }
+      },
+      error: (err: any) => {
+        console.error('Error consultando pedido activo', err);
+      }
+    });
 }
+
+  }
+
+
+
