@@ -15,6 +15,14 @@ export class PedidoService {
   obtenerPedidoActivoPorMesa(mesaId: number): Observable<Pedido | null> {
     return this.http.get<Pedido | null>(`${this.apiUrl}/mesa/${mesaId}/activo`);
   }
+
+  crearPedido(mesaId: number) {
+  return this.http.post<any>(this.apiUrl, {
+    mesaId,
+    items: []
+  });
+}
+
 }
 
 

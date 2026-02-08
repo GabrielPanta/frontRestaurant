@@ -23,16 +23,16 @@
       <p class="estado">{{ mesa.estado }}</p>
 
       <div class="acciones">
-        <button *ngIf="mesa.estado !== 'LIBRE'" (click)="cambiarEstado(mesa, 'LIBRE')">
+        <button *ngIf="mesa.estado !== 'LIBRE'" (click)="cambiarEstado(mesa, 'LIBRE'); $event.stopPropagation()">
           Marcar libre
         </button>
-        <button *ngIf="mesa.estado !== 'OCUPADA'" (click)="cambiarEstado(mesa, 'OCUPADA')">
+        <button *ngIf="mesa.estado !== 'OCUPADA'" (click)="cambiarEstado(mesa, 'OCUPADA'); $event.stopPropagation()">
           Ocupar
         </button>
-        <button *ngIf="mesa.estado !== 'RESERVADA'" (click)="cambiarEstado(mesa, 'RESERVADA')">
+        <button *ngIf="mesa.estado !== 'RESERVADA'" (click)="cambiarEstado(mesa, 'RESERVADA'); $event.stopPropagation()">
           Reservar
         </button>
-        <button class="btn-eliminar" *ngIf="esAdmin" (click)="eliminarMesa(mesa.id)">
+        <button class="btn-eliminar" *ngIf="esAdmin" (click)="eliminarMesa(mesa.id); $event.stopPropagation()">
           Eliminar
         </button>
 

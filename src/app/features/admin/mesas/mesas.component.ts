@@ -80,21 +80,36 @@ export class MesasComponent implements OnInit {
     });
   }
 
- seleccionarMesa(mesa: Mesa) {
-  this.pedidoService.obtenerPedidoActivoPorMesa(mesa.id)
-    .subscribe({
-      next: (pedido: Pedido | null) => {
-        if (pedido) {
-          console.log('Pedido activo encontrado', pedido);
-        } else {
-          console.log('No hay pedido activo, se puede crear uno nuevo');
+  seleccionarMesa(mesa: Mesa) {
+    this.pedidoService.obtenerPedidoActivoPorMesa(mesa.id)
+      .subscribe({
+        next: pedido => {
+          if (pedido) {
+            console.log('Continuar pedido existente', pedido);
+          } else {
+            this.crearPedidoParaMesa(mesa);
+          }
+        },
+        error: err => {
+          console.error('Error consultando pedido', err);
         }
-      },
-      error: (err: any) => {
-        console.error('Error consultando pedido activo', err);
-      }
-    });
-}
+      });
+  }
+
+  crearPedidoParaMesa(mesa: Mesa) {
+    this.pedidoService.crearPedido(mesa.id)
+      .subscribe({
+        next: pedido => {
+          console.log('Pedido creado', pedido);
+          mesa.estado = 'OCUPADA';
+        },
+        error: err => {
+          console.error('Error creando pedido', err);
+        }
+      });
+  }
+
+
 
   }
 
