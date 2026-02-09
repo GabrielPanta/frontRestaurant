@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { MesasComponent } from '../admin/mesas/mesas.component';
 
 @Component({
   standalone: true,
@@ -9,5 +10,6 @@ import { Component } from '@angular/core';
 class MozoHomeComponent {}
 
 export const MOZO_ROUTES: Routes = [
-  { path: '', component: MozoHomeComponent }
+  { path: '', component: MozoHomeComponent },
+  {path: 'mesas', component: MesasComponent}
 ];

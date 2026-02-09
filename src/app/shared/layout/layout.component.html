@@ -5,13 +5,13 @@
     <a *ngIf="role==='ADMIN'" routerLink="/admin">Panel Admin</a>
     <a *ngIf="role==='ADMIN'" routerLink="/admin/usuarios">Gestionar Usuarios</a>
 
-    <a *ngIf="role==='MOZO'" routerLink="/mozo">Tomar Pedido</a>
-    <a *ngIf="role==='COCINA'" routerLink="/cocina">Pedidos Cocina</a>
+    <a *ngIf="role==='MOZO'" routerLink="/mozo/mesas">Tomar Pedido</a>
+    <a *ngIf="role==='COCINA'" routerLink="/cocina/pedidos">Pedidos Cocina</a>
     <a *ngIf="role==='CAJERO'" routerLink="/cajero">Caja</a>
     <a *ngIf="role==='ADMIN'" routerLink="/admin/menu">Gestionar Platos</a>
     <a *ngIf="role==='ADMIN'" routerLink="/admin/mesas">Gestionar Mesas</a>
 
-    <a routerLink="/pedidos">Pedidos</a>
+    <a routerLink="/">Pedidos</a>
   </aside>
 
   <div class="main">

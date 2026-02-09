@@ -35,6 +35,22 @@ export class PedidoService {
     return this.http.get<any[]>(`${this.apiUrl}/${pedidoId}/items`);
   }
 
+  pedidosCocina() {
+    return this.http.get<any[]>(`${this.apiUrl}/cocina`);
+  }
+
+  cambiarEstado(pedidoId: number, estado: string) {
+    return this.http.put<any>(
+      `${this.apiUrl}/${pedidoId}/estado`,
+      null,
+      { params: { estado } }
+    );
+  }
+
+  obtenerDetalles(pedidoId: number) {
+    return this.http.get<any[]>(`${this.apiUrl}/${pedidoId}/detalles`);
+  }
+
 
 }
 

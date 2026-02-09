@@ -1,0 +1,30 @@
+<div class="cocina-container">
+  <h2>Cocina</h2>
+
+  <div *ngIf="pedidos.length === 0">
+    No hay pedidos en preparación
+  </div>
+
+  <div class="pedido-card" *ngFor="let pedido of pedidos">
+
+    <h3>Pedido #{{ pedido.id }} | Mesa {{ pedido.mesa.numero }}</h3>
+
+    <table class="tabla-cocina">
+      <tr>
+        <th>Plato</th>
+        <th>Cantidad</th>
+      </tr>
+
+      <tr *ngFor="let item of detalles[pedido.id]">
+        <td>{{ item.menuItem.nombre }}</td>
+        <td>{{ item.cantidad }}</td>
+      </tr>
+    </table>
+
+    <button (click)="marcarListo(pedido.id)">
+      Marcar como listo
+    </button>
+
+  </div>
+</div>
+
