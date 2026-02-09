@@ -80,7 +80,12 @@
 
           <tr *ngFor="let item of itemsPedido">
             <td>{{ item.menuItem.nombre }}</td>
-            <td>{{ item.cantidad }}</td>
+            <td>
+              <button (click)="agregarPlato(item.menuItem)">+</button>
+              {{ item.cantidad }}
+              <button (click)="quitarPlato(item.menuItem)">-</button>
+            </td>
+
             <td>S/ {{ item.precio }}</td>
             <td>S/ {{ item.precio * item.cantidad }}</td>
           </tr>

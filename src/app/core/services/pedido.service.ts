@@ -23,16 +23,18 @@ export class PedidoService {
     });
   }
 
+  agregarItem(pedidoId: number, menuItemId: number, cantidad: number) {
+    return this.http.post<any>(
+      `${this.apiUrl}/${pedidoId}/items`,
+      null,
+      { params: { menuItemId, cantidad } }
+    );
+  }
+
   listarItems(pedidoId: number) {
     return this.http.get<any[]>(`${this.apiUrl}/${pedidoId}/items`);
   }
 
-  agregarItem(pedidoId: number, menuItemId: number, cantidad: number) {
-    return this.http.post(
-      `${this.apiUrl}/${pedidoId}/items`,
-      { menuItemId, cantidad }
-    );
-  }
 
 }
 

@@ -159,6 +159,17 @@ export class MesasComponent implements OnInit {
       });
   }
 
+  quitarPlato(plato: any) {
+    this.pedidoService.agregarItem(
+      this.pedidoActivo.id,
+      plato.id,
+      -1
+    ).subscribe(() => {
+      this.cargarItemsPedido();
+    });
+  }
+
+
 }
 
 
