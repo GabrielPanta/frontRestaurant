@@ -10,8 +10,8 @@
     <a *ngIf="role==='CAJERO'" routerLink="/cajero">Caja</a>
     <a *ngIf="role==='ADMIN'" routerLink="/admin/menu">Gestionar Platos</a>
     <a *ngIf="role==='ADMIN'" routerLink="/admin/mesas">Gestionar Mesas</a>
-
-    <a routerLink="/">Pedidos</a>
+    <a *ngIf="role==='ADMIN'" routerLink="/admin/pedidos">Ver Pedidos en Cocina</a>
+    <a routerLink="/"></a>
   </aside>
 
   <div class="main">

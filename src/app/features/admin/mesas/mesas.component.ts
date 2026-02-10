@@ -170,7 +170,28 @@ export class MesasComponent implements OnInit {
   }
 
 
+  mesaSeleccionada: any = null;
+
+ abrirPedido(mesa: Mesa) {
+  this.mesaSeleccionada = mesa;
+  this.seleccionarMesa(mesa);
 }
+
+
+
+  cerrarModal() {
+    this.mesaSeleccionada = null;
+  }
+
+ cerrarPedido() {
+  this.pedidoService.cerrarPedido(this.pedidoActivo.id).subscribe(() => {
+    this.cerrarModal();
+    this.cargarMesas();
+  });
+}
+
+}
+
 
 
 

@@ -17,7 +17,7 @@ export class CocinaComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarPedidos();
-    setInterval(() => this.cargarPedidos(), 5000);
+    setInterval(() => this.cargarPedidos(), 10000000);
   }
 
   cargarPedidos() {

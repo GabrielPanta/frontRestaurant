@@ -51,6 +51,10 @@ export class PedidoService {
     return this.http.get<any[]>(`${this.apiUrl}/${pedidoId}/detalles`);
   }
 
+ cerrarPedido(id: number) {
+  return this.http.put(`${this.apiUrl}/${id}/cerrar`, {});
+}
+
 
 }
 
