@@ -19,10 +19,13 @@ import { MenuItemService } from '../../../core/services/menu-item.service';
 export class MesasComponent implements OnInit {
 
   mesas: Mesa[] = [];
+
+  mesaSeleccionada: Mesa | null = null;
+
   pedidoActivo: any = null;
+
   platos: any[] = [];
   itemsPedido: any[] = [];
-
 
   nuevaMesa: Partial<Mesa> = {
     numero: 0,
@@ -33,10 +36,10 @@ export class MesasComponent implements OnInit {
 
   constructor(
     private mesaService: MesaService,
-    private authService: AuthService,
     private pedidoService: PedidoService,
-    private menuService: MenuItemService
-  ) { }
+    private menuService: MenuItemService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.cargarMesas();
@@ -69,15 +72,13 @@ export class MesasComponent implements OnInit {
     });
   }
 
-
   cambiarEstado(mesa: Mesa, estado: string) {
     this.mesaService.cambiarEstado(mesa.id, estado)
       .subscribe(() => this.cargarMesas());
   }
 
   eliminarMesa(mesaId: number) {
-    const confirmar = confirm('¿Seguro que deseas eliminar esta mesa?');
-    if (!confirmar) return;
+    if (!confirm('¿Seguro que deseas eliminar esta mesa?')) return;
 
     this.mesaService.eliminar(mesaId).subscribe({
       next: () => this.cargarMesas(),
@@ -85,9 +86,9 @@ export class MesasComponent implements OnInit {
     });
   }
 
-  seleccionarMesa(mesa: Mesa) {
-    this.pedidoActivo = null;
-    this.platos = [];
+  abrirPedido(mesa: Mesa) {
+
+    this.mesaSeleccionada = mesa;
     this.itemsPedido = [];
 
     this.pedidoService.obtenerPedidoActivoPorMesa(mesa.id)
@@ -95,71 +96,74 @@ export class MesasComponent implements OnInit {
         next: pedido => {
           if (pedido) {
             this.pedidoActivo = pedido;
-            this.cargarPlatos();
             this.cargarItemsPedido();
           } else {
-            this.crearPedidoParaMesa(mesa);
+            this.pedidoActivo = null;
           }
+          this.cargarPlatos();
+        },
+        error: () => {
+          this.pedidoActivo = null;
+          this.cargarPlatos();
         }
       });
   }
 
-  crearPedidoParaMesa(mesa: Mesa) {
-    this.pedidoService.crearPedido(mesa.id)
-      .subscribe(pedido => {
-        this.pedidoActivo = pedido;
-        this.cargarPlatos();
-        this.cargarItemsPedido();
-      });
-  }
+
 
   cargarPlatos() {
-    console.log('Cargando platos...');
-    this.menuService.listarDisponibles()
-      .subscribe({
-        next: data => {
-          console.log('Platos recibidos:', data);
-          this.platos = data;
-        },
-        error: err => {
-          console.error('Error cargando platos', err);
-        }
-      });
+    this.menuService.listarDisponibles().subscribe({
+      next: data => {
+        this.platos = data;
+      },
+      error: err => {
+        console.error('Error cargando platos', err);
+      }
+    });
   }
 
   agregarPlato(plato: any) {
-    if (!this.pedidoActivo) return;
+
+    if (!this.mesaSeleccionada) return;
+
+    if (!this.pedidoActivo) {
+
+      const request = {
+        mesaId: this.mesaSeleccionada.id,
+        items: [
+          {
+            menuItemId: plato.id,
+            cantidad: 1
+          }
+        ]
+      };
+
+      this.pedidoService.crearPedidoConItems(request).subscribe({
+        next: pedido => {
+          this.pedidoActivo = pedido;
+          this.cargarItemsPedido();
+          this.cargarMesas();
+        },
+        error: err => {
+          alert(err.error?.message || 'Error al crear pedido');
+        }
+      });
+
+      return;
+    }
 
     this.pedidoService.agregarItem(
       this.pedidoActivo.id,
       plato.id,
       1
-    ).subscribe({
-      next: () => {
-        console.log('Plato agregado');
-        this.cargarItemsPedido();
-      },
-      error: err => {
-        console.error('Error agregando plato', err);
-      }
+    ).subscribe(() => {
+      this.cargarItemsPedido();
     });
   }
 
-  cargarItemsPedido() {
+  quitarPlato(plato: any) {
     if (!this.pedidoActivo) return;
 
-    this.pedidoService.listarItems(this.pedidoActivo.id)
-      .subscribe({
-        next: items => {
-          this.itemsPedido = items;
-        },
-        error: err => {
-          console.error('Error cargando items', err);
-        }
-      });
-  }
-
-  quitarPlato(plato: any) {
     this.pedidoService.agregarItem(
       this.pedidoActivo.id,
       plato.id,
@@ -169,26 +173,35 @@ export class MesasComponent implements OnInit {
     });
   }
 
+  cargarItemsPedido() {
+    if (!this.pedidoActivo) return;
 
-  mesaSeleccionada: any = null;
-
- abrirPedido(mesa: Mesa) {
-  this.mesaSeleccionada = mesa;
-  this.seleccionarMesa(mesa);
-}
-
-
-
-  cerrarModal() {
-    this.mesaSeleccionada = null;
+    this.pedidoService.listarItems(this.pedidoActivo.id).subscribe({
+      next: items => {
+        this.itemsPedido = items;
+      },
+      error: err => {
+        console.error('Error cargando items', err);
+      }
+    });
   }
 
  cerrarPedido() {
+  if (!this.pedidoActivo || this.itemsPedido.length === 0) return;
+
   this.pedidoService.cerrarPedido(this.pedidoActivo.id).subscribe(() => {
+    this.pedidoActivo = null;
     this.cerrarModal();
     this.cargarMesas();
   });
 }
+
+
+ cerrarModal() {
+  this.mesaSeleccionada = null;
+  this.itemsPedido = [];
+}
+
 
 }
 

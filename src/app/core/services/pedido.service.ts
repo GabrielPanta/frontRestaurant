@@ -55,6 +55,9 @@ export class PedidoService {
   return this.http.put(`${this.apiUrl}/${id}/cerrar`, {});
 }
 
+crearPedidoConItems(request: any) {
+  return this.http.post('http://localhost:8080/pedidos', request);
+}
 
 }
 

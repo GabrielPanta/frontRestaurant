@@ -28,26 +28,29 @@
         <span class="estado">{{ mesa.estado }}</span>
       </div>
 
-      <!-- ACCIONES ADMIN -->
       <div class="mesa-admin" *ngIf="esAdmin">
 
         <button
+          type="button"
           (click)="cambiarEstado(mesa,'LIBRE'); $event.stopPropagation()"
           [disabled]="mesa.estado === 'OCUPADA'">
           Libre
         </button>
 
         <button
+          type="button"
           (click)="cambiarEstado(mesa,'OCUPADA'); $event.stopPropagation()">
           Ocupar
         </button>
 
         <button
+          type="button"
           (click)="cambiarEstado(mesa,'RESERVADA'); $event.stopPropagation()">
           Reservar
         </button>
 
         <button
+          type="button"
           class="btn-eliminar"
           (click)="eliminarMesa(mesa.id); $event.stopPropagation()"
           [disabled]="mesa.estado === 'OCUPADA'">
@@ -62,17 +65,18 @@
 </div>
 
 <!-- MODAL PEDIDO -->
-<div class="modal-backdrop" *ngIf="mesaSeleccionada && pedidoActivo">
+<div class="modal-backdrop" *ngIf="mesaSeleccionada">
 
   <div class="modal">
 
     <header class="modal-header">
       <h3>
         Mesa {{ mesaSeleccionada.numero }} –
-        Pedido #{{ pedidoActivo.id }}
+        Pedido {{ pedidoActivo?.id ? '#' + pedidoActivo.id : 'nuevo' }}
       </h3>
 
       <button
+        type="button"
         class="btn-cerrar"
         (click)="cerrarModal()">
         ×
@@ -111,9 +115,19 @@
             <span>{{ item.menuItem.nombre }}</span>
 
             <div class="item-controls">
-              <button (click)="quitarPlato(item.menuItem)">−</button>
+              <button
+                type="button"
+                (click)="quitarPlato(item.menuItem)">
+                −
+              </button>
+
               <span>{{ item.cantidad }}</span>
-              <button (click)="agregarPlato(item.menuItem)">+</button>
+
+              <button
+                type="button"
+                (click)="agregarPlato(item.menuItem)">
+                +
+              </button>
             </div>
 
             <strong>
@@ -135,10 +149,11 @@
 
     <footer class="modal-footer">
       <span>
-        Total: S/ {{ pedidoActivo.total }}
+        Total: S/ {{ pedidoActivo?.total || 0 }}
       </span>
 
       <button
+        type="button"
         class="btn-cerrar-pedido"
         (click)="cerrarPedido()"
         [disabled]="itemsPedido.length === 0">
