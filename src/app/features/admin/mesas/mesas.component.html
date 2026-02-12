@@ -19,13 +19,13 @@
 
   <div class="grid">
     <div class="mesa-card-wrapper" *ngFor="let mesa of mesas">
-
-      <div
-        class="mesa-card"
-        [ngClass]="mesa.estado"
-        (click)="abrirPedido(mesa)">
+  
+      <div class="mesa-card" [ngClass]="mesa.estado" (click)="abrirPedido(mesa)">
         <h3>Mesa {{ mesa.numero }}</h3>
         <span class="estado">{{ mesa.estado }}</span>
+        <span class="badge-activa" *ngIf="mesa.estado === 'OCUPADA'">
+          - Pedido activo
+        </span>
       </div>
 
       <div class="mesa-admin" *ngIf="esAdmin">

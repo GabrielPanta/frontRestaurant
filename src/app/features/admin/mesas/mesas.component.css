@@ -12,7 +12,7 @@
   cursor: pointer;
 }
 
-.mesa-card.LIBRE { background: #43a047; }
+.mesa-card.LIBRE { background: #43a047; border: 2px solid #4caf50;}
 .mesa-card.OCUPADA { background: #e53935; }
 .mesa-card.RESERVADA { background: #fbc02d; color: #333; }
 
