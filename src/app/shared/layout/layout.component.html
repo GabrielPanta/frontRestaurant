@@ -1,26 +1,55 @@
 <div class="layout">
-  <aside class="sidebar">
-    <h3>Restaurante</h3>
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <div class="sidebar-header">
+      <span class="logo">🍽</span>
+      <span class="title" *ngIf="!sidebarCollapsed">Restaurante</span>
+      <button class="toggle-btn" (click)="toggleSidebar()">☰</button>
+    </div>
 
-    <a *ngIf="role==='ADMIN'" routerLink="/admin">Panel Admin</a>
-    <a *ngIf="role==='ADMIN'" routerLink="/admin/usuarios">Gestionar Usuarios</a>
+    <nav class="menu">
+      <!-- ADMIN -->
+      <ng-container *ngIf="role==='ADMIN'">
+        <p class="section">Administración</p>
+        <a routerLink="/admin" routerLinkActive="active">Panel</a>
+        <a routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a>
+        <a routerLink="/admin/menu" routerLinkActive="active">Platos</a>
+        <a routerLink="/admin/mesas" routerLinkActive="active">Mesas</a>
+        <a routerLink="/admin/pedidos" routerLinkActive="active">Pedidos</a>
+      </ng-container>
 
-    <a *ngIf="role==='MOZO'" routerLink="/mozo/mesas">Tomar Pedido</a>
-    <a *ngIf="role==='COCINA'" routerLink="/cocina/pedidos">Pedidos Cocina</a>
-    <a *ngIf="role==='CAJERO'" routerLink="/cajero">Caja</a>
-    <a *ngIf="role==='ADMIN'" routerLink="/admin/menu">Gestionar Platos</a>
-    <a *ngIf="role==='ADMIN'" routerLink="/admin/mesas">Gestionar Mesas</a>
-    <a *ngIf="role==='ADMIN'" routerLink="/admin/pedidos">Ver Pedidos en Cocina</a>
-    <a routerLink="/"></a>
+      <!-- MOZO -->
+      <ng-container *ngIf="role==='MOZO'">
+        <p class="section">Atención</p>
+        <a routerLink="/mozo/mesas" routerLinkActive="active">Mesas</a>
+      </ng-container>
+
+      <!-- COCINA -->
+      <ng-container *ngIf="role==='COCINA'">
+        <p class="section">Cocina</p>
+        <a routerLink="/cocina/pedidos" routerLinkActive="active">Pedidos</a>
+      </ng-container>
+
+      <!-- CAJA -->
+      <ng-container *ngIf="role==='CAJERO'">
+        <p class="section">Caja</p>
+        <a routerLink="/cajero" routerLinkActive="active">Cobros</a>
+      </ng-container>
+    </nav>
   </aside>
 
+  <!-- Main -->
   <div class="main">
     <header class="topbar">
-      <div>
-        Bienvenido {{ email }}
-        <span class="role-badge">{{ role }}</span>
+      <div class="left">
+        <button class="mobile-menu" (click)="toggleSidebar()">☰</button>
+        <div class="welcome">
+          <span class="email">{{ email }}</span>
+          <span class="role">{{ role }}</span>
+        </div>
       </div>
-      <button (click)="logout()">Cerrar sesión</button>
+
+      <button class="logout" (click)="logout()">Cerrar sesión</button>
     </header>
 
     <section class="content">
@@ -28,5 +57,6 @@
     </section>
   </div>
 </div>
+
 
 

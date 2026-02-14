@@ -1,25 +1,124 @@
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
+.mesas-container {
+  max-width: 1200px;
+  margin: auto;
 }
 
-.mesa-card {
-  padding: 16px;
-  border-radius: 12px;
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header h2 {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.form-inline {
+  display: flex;
+  gap: 10px;
+}
+
+.form-inline input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  width: 100px;
+}
+
+.form-inline button {
+  background: #4f46e5;
   color: white;
-  text-align: center;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-.mesa-card.LIBRE { background: #43a047; border: 2px solid #4caf50;}
-.mesa-card.OCUPADA { background: #e53935; }
-.mesa-card.RESERVADA { background: #fbc02d; color: #333; }
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 18px;
+}
 
+/* MESA CARD */
+.mesa-card {
+  border-radius: 14px;
+  padding: 18px 10px;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.mesa-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.mesa-numero {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.mesa-estado {
+  font-size: 12px;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.mesa-activa {
+  margin-top: 8px;
+  font-size: 11px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 3px 6px;
+}
+
+/* COLORES ESTADO */
+.mesa-card.LIBRE {
+  background: #16a34a;
+}
+
+.mesa-card.OCUPADA {
+  background: #dc2626;
+}
+
+.mesa-card.RESERVADA {
+  background: #f59e0b;
+  color: #1f2937;
+}
+
+/* ADMIN */
+.mesa-admin {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.mesa-admin button {
+  font-size: 11px;
+  padding: 5px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #e5e7eb;
+}
+
+.btn-eliminar {
+  background: #dc2626 !important;
+  color: white;
+}
+
+/* MODAL */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,36 +127,45 @@
 
 .modal {
   background: white;
-  width: 90%;
-  max-width: 900px;
-  height: 85vh;
-  border-radius: 12px;
+  width: 95%;
+  max-width: 1000px;
+  height: 90vh;
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
 }
 
+/* HEADER */
 .modal-header {
-  padding: 14px;
-  background: #1976d2;
+  padding: 14px 18px;
+  background: #4f46e5;
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-weight: 500;
+}
+
+.pedido-id {
+  margin-left: 8px;
+  opacity: 0.9;
+  font-size: 13px;
 }
 
 .btn-cerrar {
-  background: transparent;
   border: none;
-  font-size: 26px;
+  background: transparent;
   color: white;
+  font-size: 24px;
   cursor: pointer;
 }
 
+/* BODY */
 .modal-body {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 18px;
   padding: 16px;
   overflow: hidden;
 }
@@ -70,26 +178,29 @@
 .menu-scroll, .detalle-scroll {
   flex: 1;
   overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 8px;
 }
 
 .menu-item {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
+  padding: 10px 12px;
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  border-bottom: 1px solid #f1f1f1;
 }
 
 .menu-item:hover {
-  background: #f5f5f5;
+  background: #f9fafb;
 }
 
+/* ITEM */
 .item-ticket {
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px dashed #ccc;
+  padding: 8px 10px;
+  border-bottom: 1px dashed #ddd;
 }
 
 .item-controls {
@@ -101,74 +212,40 @@
 .item-controls button {
   width: 26px;
   height: 26px;
-  border-radius: 50%;
+  border-radius: 6px;
   border: none;
-  background: #eee;
+  background: #e5e7eb;
+  cursor: pointer;
 }
 
+/* EMPTY */
+.pedido-vacio {
+  padding: 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+/* FOOTER */
 .modal-footer {
-  padding: 16px;
-  background: #2e7d32;
-  color: white;
+  padding: 14px 18px;
+  background: #f3f4f6;
   display: flex;
   justify-content: space-between;
-  font-size: 20px;
+  align-items: center;
 }
 
-.btn-confirmar {
-  background: white;
-  color: #2e7d32;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.mesa-card-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.mesa-admin {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
-}
-
-.mesa-admin button {
-  font-size: 11px;
-  padding: 6px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  background: #eeeeee;
-}
-
-.mesa-admin button:hover {
-  background: #dcdcdc;
-}
-
-.btn-eliminar {
-  background: #e53935 !important;
-  color: white;
-}
-
-.form-card {
-  max-width: 420px;
-  margin-bottom: 40px;
-  padding: 18px;
-  border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+.total {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
 }
 
 .btn-cerrar-pedido {
-  background: #ffffff;
-  color: #2e7d32;
+  background: #16a34a;
+  color: white;
   border: none;
   padding: 10px 18px;
   border-radius: 8px;
-  font-size: 16px;
   cursor: pointer;
 }
 
@@ -176,3 +253,31 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .modal-body {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    height: 95vh;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  }
+
+  .mesa-numero {
+    font-size: 22px;
+  }
+}
+

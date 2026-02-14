@@ -1,93 +1,92 @@
 <div class="mesas-container">
 
-  <h2>Gestión de Mesas</h2>
+  <div class="header">
+    <h2>Mesas</h2>
 
-  <div class="form-card" *ngIf="esAdmin">
-    <form (ngSubmit)="crearMesa()">
+    <form class="form-inline" *ngIf="esAdmin" (ngSubmit)="crearMesa()">
       <input
         type="number"
         placeholder="N° mesa"
         [(ngModel)]="nuevaMesa.numero"
         name="numero"
         required>
-
-      <button type="submit">
-        + Crear mesa
-      </button>
+      <button type="submit">Crear</button>
     </form>
   </div>
 
+  <!-- GRID MESAS -->
   <div class="grid">
     <div class="mesa-card-wrapper" *ngFor="let mesa of mesas">
-  
-      <div class="mesa-card" [ngClass]="mesa.estado" (click)="abrirPedido(mesa)">
-        <h3>Mesa {{ mesa.numero }}</h3>
-        <span class="estado">{{ mesa.estado }}</span>
-        <span class="badge-activa" *ngIf="mesa.estado === 'OCUPADA'">
-          - Pedido activo
-        </span>
+
+      <div
+        class="mesa-card"
+        [ngClass]="mesa.estado"
+        (click)="abrirPedido(mesa)">
+
+        <div class="mesa-numero">
+          {{ mesa.numero }}
+        </div>
+
+        <div class="mesa-estado">
+          {{ mesa.estado }}
+        </div>
+
+        <div
+          class="mesa-activa"
+          *ngIf="mesa.estado === 'OCUPADA'">
+          Pedido activo
+        </div>
       </div>
 
+      <!-- ADMIN CONTROLES -->
       <div class="mesa-admin" *ngIf="esAdmin">
-
         <button
-          type="button"
           (click)="cambiarEstado(mesa,'LIBRE'); $event.stopPropagation()"
-  
           [disabled]="mesa.estado === 'OCUPADA'">
-
           Libre
         </button>
 
         <button
-          type="button"
           (click)="cambiarEstado(mesa,'OCUPADA'); $event.stopPropagation()">
           Ocupar
         </button>
 
         <button
-          type="button"
           (click)="cambiarEstado(mesa,'RESERVADA'); $event.stopPropagation()">
           Reservar
         </button>
 
         <button
-          type="button"
           class="btn-eliminar"
           (click)="eliminarMesa(mesa.id); $event.stopPropagation()"
           [disabled]="mesa.estado === 'OCUPADA'">
           Eliminar
         </button>
-
       </div>
 
     </div>
   </div>
-
 </div>
+
 
 <!-- MODAL PEDIDO -->
 <div class="modal-backdrop" *ngIf="mesaSeleccionada">
-
   <div class="modal">
 
     <header class="modal-header">
-      <h3>
-        Mesa {{ mesaSeleccionada.numero }} –
-        Pedido {{ pedidoActivo?.id ? '#' + pedidoActivo.id : 'nuevo' }}
-      </h3>
-      <button
-        type="button"
-        class="btn-cerrar"
-        (click)="cerrarModal()">
-        ×
-      </button>
+      <div>
+        Mesa {{ mesaSeleccionada.numero }}
+        <span class="pedido-id">
+          {{ pedidoActivo?.id ? '#'+pedidoActivo.id : 'nuevo' }}
+        </span>
+      </div>
 
+      <button class="btn-cerrar" (click)="cerrarModal()">×</button>
     </header>
 
     <div class="modal-body">
 
-      <!-- MENÚ -->
+      <!-- MENU -->
       <div class="menu">
         <h4>Menú</h4>
 
@@ -96,21 +95,18 @@
             class="menu-item"
             *ngFor="let plato of platos"
             (click)="agregarPlato(plato)">
+
             <span>{{ plato.nombre }}</span>
             <strong>S/ {{ plato.precio }}</strong>
           </div>
         </div>
       </div>
 
-      <!-- DETALLE PEDIDO -->
+      <!-- PEDIDO -->
       <div class="detalle">
         <h4>Pedido</h4>
-       <div *ngIf="itemsPedido.length > 0">
-        Estado: {{ pedidoActivo.estado }}</div> 
-        <div  
-          class="detalle-scroll"
-          *ngIf="itemsPedido.length > 0">
 
+        <div class="detalle-scroll" *ngIf="itemsPedido.length > 0">
           <div
             class="item-ticket"
             *ngFor="let item of itemsPedido">
@@ -118,55 +114,38 @@
             <span>{{ item.menuItem.nombre }}</span>
 
             <div class="item-controls">
-              <button
-                type="button"
-                (click)="quitarPlato(item.menuItem)">
-                −
-              </button>
-
+              <button (click)="quitarPlato(item.menuItem)">−</button>
               <span>{{ item.cantidad }}</span>
-
-              <button
-                type="button"
-                (click)="agregarPlato(item.menuItem)">
-                +
-              </button>
+              <button (click)="agregarPlato(item.menuItem)">+</button>
             </div>
 
-            <strong>
-              S/ {{ item.precio * item.cantidad }}
-            </strong>
-
+            <strong>S/ {{ item.precio * item.cantidad }}</strong>
           </div>
         </div>
 
-        <div
-          class="pedido-vacio"
-          *ngIf="itemsPedido.length === 0">
-          Pedido vacío
+        <div class="pedido-vacio" *ngIf="itemsPedido.length === 0">
+          Sin productos
         </div>
-
       </div>
 
     </div>
 
     <footer class="modal-footer">
-      <span>
-        Total: S/ {{ pedidoActivo?.total || 0 }}
-      </span>
+      <div class="total">
+        Total S/ {{ pedidoActivo?.total || 0 }}
+      </div>
 
       <button
-        type="button"
         class="btn-cerrar-pedido"
         (click)="cerrarPedido()"
         [disabled]="itemsPedido.length === 0">
-        {{ itemsPedido.length === 0 ? 'Agrega items' : 'Cerrar pedido' }}
+        Cerrar pedido
       </button>
     </footer>
 
   </div>
-
 </div>
+
 
 
 
