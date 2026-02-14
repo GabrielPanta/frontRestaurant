@@ -1,55 +1,164 @@
 .cocina-container {
   padding: 20px;
+  max-width: 1400px;
+  margin: auto;
 }
 
-h2 {
-  margin-bottom: 20px;
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
-.sin-pedidos {
-  background: #f5f5f5;
-  padding: 15px;
+.header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.contador {
+  background: #111827;
+  color: white;
+  padding: 6px 12px;
   border-radius: 8px;
+  font-size: 13px;
 }
 
+/* SIN PEDIDOS */
+.sin-pedidos {
+  background: #f3f4f6;
+  border: 1px dashed #d1d5db;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  color: #6b7280;
+}
+
+/* GRID */
+.pedidos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+/* CARD PEDIDO */
 .pedido-card {
   background: white;
-  border-radius: 10px;
+  border-radius: 14px;
   padding: 16px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-left: 6px solid #f59e0b;
 }
 
+/* HEADER CARD */
 .pedido-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.pedido-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.pedido-id {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.mesa {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.estado {
+  background: #f59e0b;
+  color: white;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* ITEMS */
+.items {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+.nombre {
+  font-size: 14px;
+  color: #111827;
+}
+
+.cantidad {
+  font-size: 14px;
   font-weight: 600;
+  color: #111827;
 }
 
-.tabla-cocina {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 12px;
-}
-
-.tabla-cocina th,
-.tabla-cocina td {
-  border-bottom: 1px solid #eee;
-  padding: 8px;
-  text-align: left;
-}
-
+/* BOTON */
 .btn-listo {
-  background: #28a745;
+  background: #16a34a;
   color: white;
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
+  padding: 10px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .btn-listo:hover {
-  background: #218838;
+  background: #15803d;
 }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .pedidos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .cocina-container {
+    padding: 14px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .pedido-card {
+    padding: 14px;
+  }
+
+  .pedido-id {
+    font-size: 16px;
+  }
+
+  .nombre,
+  .cantidad {
+    font-size: 13px;
+  }
+}
+
 

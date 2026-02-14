@@ -1,45 +1,69 @@
-<div class="form-card">
+<div class="contenedor">
 
-  <h2>Crear Usuario</h2>
+  <div class="form-card">
 
-  <form (ngSubmit)="crearUsuario()">
+    <div class="form-header">
+      <h2>Nuevo usuario</h2>
+      <p>Crear cuenta para acceso al sistema</p>
+    </div>
 
-    <input
-      type="text"
-      placeholder="Nombre"
-      [(ngModel)]="usuario.nombre"
-      name="nombre"
-      required>
+    <form (ngSubmit)="crearUsuario()" #f="ngForm">
 
-    <input
-      type="email"
-      placeholder="Email"
-      [(ngModel)]="usuario.email"
-      name="email"
-      required>
+      <div class="campo">
+        <label>Nombre</label>
+        <input
+          type="text"
+          [(ngModel)]="usuario.nombre"
+          name="nombre"
+          required>
+      </div>
 
-    <input
-      type="password"
-      placeholder="Contraseña"
-      [(ngModel)]="usuario.password"
-      name="password"
-      required>
+      <div class="campo">
+        <label>Email</label>
+        <input
+          type="email"
+          [(ngModel)]="usuario.email"
+          name="email"
+          required>
+      </div>
 
-    <select
-      [(ngModel)]="usuario.rol"
-      name="rol"
-      required>
+      <div class="campo">
+        <label>Contraseña</label>
+        <input
+          type="password"
+          [(ngModel)]="usuario.password"
+          name="password"
+          required>
+      </div>
 
-      <option *ngFor="let r of roles" [value]="r">
-        {{ r }}
-      </option>
+      <div class="campo">
+        <label>Rol</label>
+        <select
+          [(ngModel)]="usuario.rol"
+          name="rol"
+          required>
 
-    </select>
+          <option value="" disabled selected>
+            Seleccionar rol
+          </option>
 
-    <button type="submit">
-      Crear Usuario
-    </button>
+          <option *ngFor="let r of roles" [value]="r">
+            {{ r }}
+          </option>
 
-  </form>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-primario"
+        [disabled]="f.invalid">
+        Crear usuario
+      </button>
+
+    </form>
+
+  </div>
 
 </div>
+

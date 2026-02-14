@@ -1,15 +1,49 @@
 <div class="login-container">
-  <form class="login-card" [formGroup]="form" (ngSubmit)="submit()">
-    <h2>Sistema Restaurante</h2>
-    <p class="subtitle">Inicia sesión para continuar</p>
 
-    <input type="email" placeholder="Correo electrónico" formControlName="email">
-    <input type="password" placeholder="Contraseña" formControlName="password">
+  <div class="login-wrapper">
 
-    <button type="submit">Ingresar</button>
+    <form
+      class="login-card"
+      [formGroup]="form"
+      (ngSubmit)="submit()">
 
-    <p class="error" *ngIf="error">{{ error }}</p>
-  </form>
+      <div class="login-header">
+        <h1>Sistema Restaurante</h1>
+        <p>Acceso al panel de gestión</p>
+      </div>
+
+      <div class="campo">
+        <label>Email</label>
+        <input
+          type="email"
+          formControlName="email"
+          autocomplete="username">
+      </div>
+
+      <div class="campo">
+        <label>Contraseña</label>
+        <input
+          type="password"
+          formControlName="password"
+          autocomplete="current-password">
+      </div>
+
+      <button
+        type="submit"
+        class="btn-login"
+        [disabled]="form.invalid">
+        Ingresar
+      </button>
+
+      <div class="error" *ngIf="error">
+        {{ error }}
+      </div>
+
+    </form>
+
+  </div>
+
 </div>
+
 
 

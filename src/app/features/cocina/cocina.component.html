@@ -1,38 +1,56 @@
 <div class="cocina-container">
-  <h2>Panel de Cocina</h2>
+
+  <div class="header">
+    <h2>Cocina</h2>
+    <div class="contador">
+      {{ pedidos.length }} pedidos en preparación
+    </div>
+  </div>
 
   <div *ngIf="pedidos.length === 0" class="sin-pedidos">
     No hay pedidos en preparación
   </div>
 
-  <div class="pedido-card" *ngFor="let pedido of pedidos">
+  <div class="pedidos-grid">
 
-    <div class="pedido-header">
-      <span class="pedido-id">Pedido #{{ pedido.id }}</span>
-      <span class="mesa">Mesa {{ pedido.mesa.numero }}</span>
+    <div class="pedido-card" *ngFor="let pedido of pedidos">
+
+      <div class="pedido-header">
+        <div class="pedido-info">
+          <span class="pedido-id">#{{ pedido.id }}</span>
+          <span class="mesa">Mesa {{ pedido.mesa.numero }}</span>
+        </div>
+
+        <div class="estado">
+          En preparación
+        </div>
+      </div>
+
+      <div class="items">
+        <div
+          class="item"
+          *ngFor="let item of detalles[pedido.id] || []">
+
+          <span class="nombre">
+            {{ item.menuItem.nombre }}
+          </span>
+
+          <span class="cantidad">
+            x{{ item.cantidad }}
+          </span>
+        </div>
+      </div>
+
+      <button
+        class="btn-listo"
+        (click)="marcarListo(pedido.id)">
+        Marcar listo
+      </button>
+
     </div>
-
-    <table class="tabla-cocina">
-      <thead>
-        <tr>
-          <th>Plato</th>
-          <th>Cantidad</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr *ngFor="let item of detalles[pedido.id] || []">
-          <td>{{ item.menuItem.nombre }}</td>
-          <td>{{ item.cantidad }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <button class="btn-listo" (click)="marcarListo(pedido.id)">
-      Marcar como listo
-    </button>
 
   </div>
 </div>
+
 
 

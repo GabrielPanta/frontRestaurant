@@ -104,8 +104,8 @@
 
       <!-- PEDIDO -->
       <div class="detalle">
-        <h4>Pedido</h4>
-
+        <h4 *ngIf="itemsPedido.length > 0">Pedido: {{ pedidoActivo.estado }}</h4>
+        
         <div class="detalle-scroll" *ngIf="itemsPedido.length > 0">
           <div
             class="item-ticket"
@@ -124,7 +124,7 @@
         </div>
 
         <div class="pedido-vacio" *ngIf="itemsPedido.length === 0">
-          Sin productos
+          Agrega platos al pedido
         </div>
       </div>
 
