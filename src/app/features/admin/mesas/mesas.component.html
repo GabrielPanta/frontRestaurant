@@ -33,7 +33,9 @@
         <button
           type="button"
           (click)="cambiarEstado(mesa,'LIBRE'); $event.stopPropagation()"
+  
           [disabled]="mesa.estado === 'OCUPADA'">
+
           Libre
         </button>
 
@@ -74,13 +76,13 @@
         Mesa {{ mesaSeleccionada.numero }} –
         Pedido {{ pedidoActivo?.id ? '#' + pedidoActivo.id : 'nuevo' }}
       </h3>
-
       <button
         type="button"
         class="btn-cerrar"
         (click)="cerrarModal()">
         ×
       </button>
+
     </header>
 
     <div class="modal-body">
@@ -103,8 +105,9 @@
       <!-- DETALLE PEDIDO -->
       <div class="detalle">
         <h4>Pedido</h4>
-
-        <div
+       <div *ngIf="itemsPedido.length > 0">
+        Estado: {{ pedidoActivo.estado }}</div> 
+        <div  
           class="detalle-scroll"
           *ngIf="itemsPedido.length > 0">
 

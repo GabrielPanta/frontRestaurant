@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PedidoService } from '../../core/services/pedido.service';
 
@@ -8,37 +8,61 @@ import { PedidoService } from '../../core/services/pedido.service';
   templateUrl: './cocina.component.html',
   styleUrls: ['./cocina.component.css']
 })
-export class CocinaComponent implements OnInit {
+export class CocinaComponent implements OnInit, OnDestroy {
 
   pedidos: any[] = [];
   detalles: { [key: number]: any[] } = {};
+  intervalo: any;
 
   constructor(private pedidoService: PedidoService) {}
 
   ngOnInit(): void {
     this.cargarPedidos();
-    setInterval(() => this.cargarPedidos(), 10000000);
+
+    // refresco cada 5 segundos (tiempo real cocina)
+    this.intervalo = setInterval(() => {
+      this.cargarPedidos();
+    }, 5000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalo) {
+      clearInterval(this.intervalo);
+    }
   }
 
   cargarPedidos() {
     this.pedidoService.pedidosCocina()
-      .subscribe(data => {
-        this.pedidos = data;
-        data.forEach(p => this.cargarDetalles(p.id));
+      .subscribe({
+        next: data => {
+          this.pedidos = data;
+          data.forEach(p => this.cargarDetalles(p.id));
+        },
+        error: err => {
+          console.error('Error cargando pedidos cocina', err);
+        }
       });
   }
 
   cargarDetalles(pedidoId: number) {
     this.pedidoService.obtenerDetalles(pedidoId)
-      .subscribe(items => {
-        this.detalles[pedidoId] = items;
+      .subscribe({
+        next: items => {
+          this.detalles[pedidoId] = items;
+        },
+        error: err => {
+          console.error('Error cargando detalles', err);
+        }
       });
   }
 
   marcarListo(pedidoId: number) {
     this.pedidoService.cambiarEstado(pedidoId, 'LISTO')
-      .subscribe(() => this.cargarPedidos());
+      .subscribe({
+        next: () => this.cargarPedidos(),
+        error: err => console.error('Error cambiando estado', err)
+      });
   }
-
 }
+
 
