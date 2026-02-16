@@ -1,0 +1,46 @@
+<div class="estadisticas">
+  <div class="header">
+    <h2>Panel de estadísticas</h2>
+    <span class="fecha">Hoy</span>
+  </div>
+
+  <div class="resumen-grid">
+    <div class="resumen-card ventas">
+      <div class="titulo">Ventas de hoy</div>
+      <div class="valor">S/ {{ totalVentasHoy }}</div>
+    </div>
+
+    <div class="resumen-card pedidos">
+      <div class="titulo">Pedidos</div>
+      <div class="valor">{{ cantidadPedidos }}</div>
+    </div>
+
+    <div class="resumen-card ticket">
+      <div class="titulo">Ticket promedio</div>
+      <div class="valor">S/ {{ ticketPromedio }}</div>
+    </div>
+  </div>
+
+  <div class="tabla-card">
+    <div class="tabla-header">
+      <h3>Productos más vendidos</h3>
+    </div>
+
+    <div class="tabla-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of productos">
+            <td>{{ p.nombre }}</td>
+            <td class="cantidad">{{ p.cantidad }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

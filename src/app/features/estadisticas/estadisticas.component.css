@@ -1,0 +1,142 @@
+.estadisticas {
+  padding: 24px;
+  background: #f5f7fb;
+  min-height: 100%;
+}
+
+/* header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header h2 {
+  font-size: 22px;
+  margin: 0;
+  color: #1f2937;
+}
+
+.fecha {
+  font-size: 13px;
+  background: #e5e7eb;
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: #374151;
+}
+
+/* cards resumen */
+.resumen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.resumen-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.resumen-card .titulo {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.resumen-card .valor {
+  font-size: 28px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* variantes color */
+.ventas {
+  border-left: 5px solid #10b981;
+}
+
+.pedidos {
+  border-left: 5px solid #3b82f6;
+}
+
+.ticket {
+  border-left: 5px solid #f59e0b;
+}
+
+/* tabla */
+.tabla-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  padding: 20px;
+}
+
+.tabla-header {
+  margin-bottom: 12px;
+}
+
+.tabla-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #1f2937;
+}
+
+.tabla-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 400px;
+}
+
+thead {
+  background: #f9fafb;
+}
+
+th, td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+th {
+  text-align: left;
+  color: #374151;
+  font-weight: 600;
+}
+
+td {
+  color: #111827;
+}
+
+td.cantidad {
+  text-align: right;
+  font-weight: 600;
+}
+
+/* responsive */
+@media (max-width: 600px) {
+  .estadisticas {
+    padding: 16px;
+  }
+
+  .header h2 {
+    font-size: 18px;
+  }
+
+  .resumen-card .valor {
+    font-size: 22px;
+  }
+
+  th, td {
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+}

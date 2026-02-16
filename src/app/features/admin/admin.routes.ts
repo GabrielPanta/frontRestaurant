@@ -5,6 +5,7 @@ import { MesasComponent } from './mesas/mesas.component';
 import { CocinaComponent } from '../cocina/cocina.component';
 import { CrearUsuarioComponent } from './usuarios/crear-usuario.component';
 import { CajeroComponent } from '../cajero/cajero.component';
+import { EstadisticasComponent } from '../estadisticas/estadisticas.component';
 
 @Component({
   standalone: true,
@@ -31,7 +32,8 @@ export const ADMIN_ROUTES: Routes = [
   { path: 'mesas', component:MesasComponent },
   {path:'pedidos',component: CocinaComponent},
   {path: 'usuarios',component: CrearUsuarioComponent},
-  {path:'pedido',component:CajeroComponent}
+  {path:'pedido',component:CajeroComponent},
+  {path:'estadisticas', component: EstadisticasComponent}
 
 ];
 
