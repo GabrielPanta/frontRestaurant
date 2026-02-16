@@ -15,7 +15,8 @@
         <a routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a>
         <a routerLink="/admin/menu" routerLinkActive="active">Platos</a>
         <a routerLink="/admin/mesas" routerLinkActive="active">Mesas</a>
-        <a routerLink="/admin/pedidos" routerLinkActive="active">Pedidos</a>
+        <a routerLink="/admin/pedidos" routerLinkActive="active">Pedidos Cocina</a>
+        <a routerLink="/admin/pedido" routerLinkActive="active">Cobros</a>
       </ng-container>
 
       <!-- MOZO -->
@@ -33,7 +34,7 @@
       <!-- CAJA -->
       <ng-container *ngIf="role==='CAJERO'">
         <p class="section">Caja</p>
-        <a routerLink="/cajero" routerLinkActive="active">Cobros</a>
+        <a routerLink="/cajero/pedido" routerLinkActive="active">Cobros</a>
       </ng-container>
     </nav>
   </aside>

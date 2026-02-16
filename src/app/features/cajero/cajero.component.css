@@ -1,0 +1,76 @@
+.cajero-container {
+padding: 20px;
+}
+
+.cajero-container h2 {
+margin-bottom: 20px;
+color: #333;
+}
+
+.pedido-card {
+background: #ffffff;
+border-radius: 10px;
+padding: 15px 18px;
+margin-bottom: 18px;
+box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+border-left: 6px solid #28a745;
+}
+
+.pedido-card h3 {
+margin-bottom: 12px;
+color: #222;
+}
+
+.pedido-card table {
+width: 100%;
+border-collapse: collapse;
+margin-bottom: 10px;
+}
+
+.pedido-card th {
+text-align: left;
+font-size: 14px;
+color: #666;
+border-bottom: 1px solid #eee;
+padding: 6px 4px;
+}
+
+.pedido-card td {
+padding: 6px 4px;
+border-bottom: 1px solid #f2f2f2;
+font-size: 14px;
+}
+
+.total {
+text-align: right;
+font-weight: 600;
+margin-top: 8px;
+margin-bottom: 12px;
+font-size: 16px;
+color: #000;
+}
+
+.pedido-card button {
+width: 100%;
+padding: 8px;
+border: none;
+border-radius: 6px;
+background: #28a745;
+color: white;
+font-weight: 600;
+cursor: pointer;
+transition: 0.2s;
+}
+
+.pedido-card button:hover {
+background: #218838;
+}
+
+.vacio {
+background: #fff;
+padding: 20px;
+border-radius: 8px;
+color: #666;
+text-align: center;
+box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}

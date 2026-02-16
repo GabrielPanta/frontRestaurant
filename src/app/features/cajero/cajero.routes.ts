@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CajeroComponent } from './cajero.component';
 
 @Component({
   standalone: true,
@@ -9,5 +10,6 @@ import { Component } from '@angular/core';
 class CajeroHomeComponent {}
 
 export const CAJERO_ROUTES: Routes = [
-  { path: '', component: CajeroHomeComponent }
+  { path: '', component: CajeroHomeComponent },
+  {path:'pedido',component:CajeroComponent}
 ];

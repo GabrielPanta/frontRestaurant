@@ -51,13 +51,17 @@ export class PedidoService {
     return this.http.get<any[]>(`${this.apiUrl}/${pedidoId}/detalles`);
   }
 
- cerrarPedido(id: number) {
-  return this.http.put(`${this.apiUrl}/${id}/cerrar`, {});
-}
+  cerrarPedido(id: number) {
+    return this.http.put(`${this.apiUrl}/${id}/cerrar`, {});
+  }
 
-crearPedidoConItems(request: any) {
-  return this.http.post('http://localhost:8080/pedidos', request);
-}
+  crearPedidoConItems(request: any) {
+    return this.http.post('http://localhost:8080/pedidos', request);
+  }
+
+  pedidosPorEstado(estado: string) {
+    return this.http.get<any[]>(`${this.apiUrl}/estado/${estado}`);
+  }
 
 }
 

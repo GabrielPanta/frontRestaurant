@@ -1,0 +1,42 @@
+<div class="cajero-container">
+    <h2>Panel de Caja</h2>
+    <div *ngIf="pedidos.length === 0" class="mensaje-vacio">
+        No hay pedidos listos para cobrar </div>
+    <div class="pedido-card" *ngFor="let pedido of pedidos">
+
+        <h3>
+            Pedido #{{ pedido.id }} |
+            Mesa {{ pedido.mesa?.numero }}
+        </h3>
+
+        <table class="tabla-detalles">
+
+            <thead>
+                <tr>
+                    <th>Plato</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let item of detalles[pedido.id]">
+                    <td>{{ item.menuItem?.nombre }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>S/ {{ item.precio }}</td>
+                    <td>S/ {{ item.precio * item.cantidad }}</td>
+                </tr>
+            </tbody>
+
+        </table>
+
+        <div class="total">
+            Total: S/ {{ pedido.total }}
+        </div>
+
+        <button class="btn-cerrar" (click)="cerrarPedido(pedido.id)">
+            Cobrar y cerrar pedido
+        </button>
+    </div>
+</div>
