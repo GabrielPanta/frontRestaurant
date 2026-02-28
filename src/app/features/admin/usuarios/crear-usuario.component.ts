@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { UsuarioService } from '../../../core/services/usuario.service';    
 import { Usuario } from '../../../core/models/usuario.model';
 
 @Component({
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterModule],
     templateUrl: './crear-usuario.component.html',
     styleUrls: ['./crear-usuario.component.css']
 })
@@ -54,4 +55,3 @@ export class CrearUsuarioComponent {
   }
 
 }
-

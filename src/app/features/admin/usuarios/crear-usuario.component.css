@@ -101,6 +101,43 @@ select {
   cursor: not-allowed;
 }
 
+/* secondary button */
+.btn-secundario {
+  padding: 11px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #e5e7eb;
+  color: #111827;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.15s, transform 0.05s;
+}
+
+.btn-secundario:hover {
+  background: #d1d5db;
+}
+
+.btn-secundario:active {
+  transform: scale(0.98);
+}
+
+/* button group */
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.button-group .btn-primario,
+.button-group .btn-secundario {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
 /* RESPONSIVE */
 @media (max-width: 600px) {
   .contenedor {
@@ -119,5 +156,9 @@ select {
   input,
   select {
     font-size: 13px;
+  }
+
+  .button-group {
+    flex-direction: column;
   }
 }

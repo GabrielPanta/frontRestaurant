@@ -54,12 +54,18 @@
         </select>
       </div>
 
-      <button
-        type="submit"
-        class="btn-primario"
-        [disabled]="f.invalid">
-        Crear usuario
-      </button>
+      <div class="button-group">
+        <button
+          type="submit"
+          class="btn-primario"
+          [disabled]="f.invalid">
+          Crear usuario
+        </button>
+
+        <a routerLink="/admin/usuarios" class="btn-secundario">
+          Ver lista de usuarios
+        </a>
+      </div>
 
     </form>
 
