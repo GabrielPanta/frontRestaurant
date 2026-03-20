@@ -1,148 +1,110 @@
-<div class="mesas-container">
-
-  <div class="header">
-    <h2>Mesas</h2>
-
-    <form class="form-inline" *ngIf="esAdmin" (ngSubmit)="crearMesa()">
+<div class="page-container">
+  <header class="page-header">
+    <h2>Gestión de Mesas</h2>
+    <form class="form-inline" *ngIf="esAdmin" (ngSubmit)="crearMesa()" style="display: flex; gap: 10px;">
       <input
         type="number"
+        class="form-input"
         placeholder="N° mesa"
         [(ngModel)]="nuevaMesa.numero"
         name="numero"
-        required>
-      <button type="submit">Crear</button>
+        required
+        style="width: 120px;">
+      <button type="submit" class="btn btn-primary" [disabled]="!nuevaMesa.numero">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Crear
+      </button>
     </form>
-  </div>
+  </header>
 
-  <!-- GRID MESAS -->
-  <div class="grid">
-    <div class="mesa-card-wrapper" *ngFor="let mesa of mesas">
-
-      <div
-        class="mesa-card"
+  <div class="status-grid">
+    <div class="mesa-wrapper" *ngFor="let mesa of mesas">
+      <div 
+        class="status-card mesa-card" 
         [ngClass]="mesa.estado"
         (click)="abrirPedido(mesa)">
-
-        <div class="mesa-numero">
-          {{ mesa.numero }}
-        </div>
-
-        <div class="mesa-estado">
-          {{ mesa.estado }}
-        </div>
-
-        <div
-          class="mesa-activa"
-          *ngIf="mesa.estado === 'OCUPADA'">
-          Pedido activo
+        <div class="number">{{ mesa.numero }}</div>
+        <div class="label">{{ mesa.estado }}</div>
+        <div class="active-badge" *ngIf="mesa.estado === 'OCUPADA'">
+          Pedido Activo
         </div>
       </div>
 
-      <!-- ADMIN CONTROLES -->
-      <div class="mesa-admin" *ngIf="esAdmin">
-        <button
-          (click)="cambiarEstado(mesa,'LIBRE'); $event.stopPropagation()"
-          [disabled]="mesa.estado === 'OCUPADA'">
-          Libre
+      <div class="admin-actions" *ngIf="esAdmin">
+        <button class="action-btn" (click)="cambiarEstado(mesa,'LIBRE'); $event.stopPropagation()" [title]="'Liberar'">
+          🔓
         </button>
-
-        <button
-          (click)="cambiarEstado(mesa,'OCUPADA'); $event.stopPropagation()">
-          Ocupar
+        <button class="action-btn" (click)="cambiarEstado(mesa,'RESERVADA'); $event.stopPropagation()" [title]="'Reservar'">
+          📅
         </button>
-
-        <button
-          (click)="cambiarEstado(mesa,'RESERVADA'); $event.stopPropagation()">
-          Reservar
-        </button>
-
-        <button
-          class="btn-eliminar"
-          (click)="eliminarMesa(mesa.id); $event.stopPropagation()"
-          [disabled]="mesa.estado === 'OCUPADA'">
-          Eliminar
+        <button class="action-btn delete" (click)="eliminarMesa(mesa.id); $event.stopPropagation()" [title]="'Eliminar'">
+          🗑️
         </button>
       </div>
-
     </div>
   </div>
 </div>
 
-
-<!-- MODAL PEDIDO -->
-<div class="modal-backdrop" *ngIf="mesaSeleccionada">
-  <div class="modal">
-
-    <header class="modal-header">
-      <div>
-        Mesa {{ mesaSeleccionada.numero }}
-        <span class="pedido-id">
-          {{ pedidoActivo?.id ? '#'+pedidoActivo.id : 'nuevo' }}
-        </span>
+<div class="app-modal-backdrop" *ngIf="mesaSeleccionada">
+  <div class="app-modal">
+    <header class="app-modal-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div class="modal-logo">🍽️</div>
+        <div>
+          <h3 style="margin: 0;">Mesa {{ mesaSeleccionada.numero }}</h3>
+          <span style="font-size: 13px; color: var(--text-muted);">
+            {{ pedidoActivo?.id ? 'Pedido #' + pedidoActivo.id : 'Generando nuevo pedido...' }}
+          </span>
+        </div>
       </div>
-
-      <button class="btn-cerrar" (click)="cerrarModal()">×</button>
+      <button class="btn-close" (click)="cerrarModal()">×</button>
     </header>
 
-    <div class="modal-body">
-
-      <!-- MENU -->
-      <div class="menu">
-        <h4>Menú</h4>
-
-        <div class="menu-scroll">
-          <div
-            class="menu-item"
-            *ngFor="let plato of platos"
-            (click)="agregarPlato(plato)">
-
-            <span>{{ plato.nombre }}</span>
-            <strong>S/ {{ plato.precio }}</strong>
+    <div class="app-modal-body" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+      <div class="menu-section">
+        <h4 class="section-title">Nuestra Carta</h4>
+        <div class="scroll-list">
+          <div class="list-item" *ngFor="let plato of platos" (click)="agregarPlato(plato)">
+            <div class="item-info">
+              <span class="name">{{ plato.nombre }}</span>
+            </div>
+            <strong class="price">S/ {{ plato.precio | number:'1.2-2' }}</strong>
           </div>
         </div>
       </div>
 
-      <!-- PEDIDO -->
-      <div class="detalle">
-        <h4 *ngIf="itemsPedido.length > 0">Pedido: {{ pedidoActivo.estado }}</h4>
-        
-        <div class="detalle-scroll" *ngIf="itemsPedido.length > 0">
-          <div
-            class="item-ticket"
-            *ngFor="let item of itemsPedido">
-
-            <span>{{ item.menuItem.nombre }}</span>
-
-            <div class="item-controls">
+      <div class="order-section">
+        <h4 class="section-title">Detalle del Pedido</h4>
+        <div class="scroll-list order-list" [class.empty]="itemsPedido.length === 0">
+          <div class="order-item" *ngFor="let item of itemsPedido">
+            <div class="order-info">
+              <span class="name">{{ item.menuItem.nombre }}</span>
+              <span class="unit-price">S/ {{ item.precio }} c/u</span>
+            </div>
+            <div class="qty-controls">
               <button (click)="quitarPlato(item.menuItem)">−</button>
-              <span>{{ item.cantidad }}</span>
+              <span class="qty">{{ item.cantidad }}</span>
               <button (click)="agregarPlato(item.menuItem)">+</button>
             </div>
-
-            <strong>S/ {{ item.precio * item.cantidad }}</strong>
+            <strong class="subtotal">S/ {{ item.precio * item.cantidad | number:'1.2-2' }}</strong>
+          </div>
+          <div class="empty-msg" *ngIf="itemsPedido.length === 0">
+             Selecciona platos de la carta para comenzar el pedido.
           </div>
         </div>
-
-        <div class="pedido-vacio" *ngIf="itemsPedido.length === 0">
-          Agrega platos al pedido
-        </div>
       </div>
-
     </div>
 
-    <footer class="modal-footer">
-      <div class="total">
-        Total S/ {{ pedidoActivo?.total || 0 }}
+    <footer class="app-modal-footer">
+      <div class="order-summary">
+        <span class="label">Total a Pagar</span>
+        <span class="value">S/ {{ pedidoActivo?.total || 0 | number:'1.2-2' }}</span>
       </div>
-
-      <button
-        class="btn-cerrar-pedido"
-        (click)="cerrarPedido()"
-        [disabled]="itemsPedido.length === 0">
-        Cerrar pedido
+      <button class="btn btn-primary" (click)="cerrarPedido()" [disabled]="itemsPedido.length === 0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        Confirmar y Cerrar Mesa
       </button>
     </footer>
-
   </div>
 </div>
 

@@ -12,7 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class LayoutComponent {
 
-  role = this.auth.getRole();
+  role$ = this.auth.role$;
   email = localStorage.getItem('email');
   sidebarCollapsed = false;
 

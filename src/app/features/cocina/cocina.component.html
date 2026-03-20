@@ -27,18 +27,17 @@
       </div>
 
       <div class="items">
-        <div
-          class="item"
-          *ngFor="let item of detalles[pedido.id] || []">
+        <ng-container *ngFor="let item of detalles[pedido.id] || []">
+          <div class="item" *ngIf="item.estado !== 'LISTO'">
+            <span class="nombre">
+              {{ item.menuItem.nombre }}
+            </span>
 
-          <span class="nombre">
-            {{ item.menuItem.nombre }}
-          </span>
-
-          <span class="cantidad">
-            x{{ item.cantidad }}
-          </span>
-        </div>
+            <span class="cantidad">
+              x{{ item.cantidad }}
+            </span>
+          </div>
+        </ng-container>
       </div>
 
       <button

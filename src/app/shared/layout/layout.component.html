@@ -9,7 +9,7 @@
 
     <nav class="menu">
       <!-- ADMIN -->
-      <ng-container *ngIf="role==='ADMIN'">
+      <ng-container *ngIf="(role$ | async)==='ADMIN'">
         <p class="section">Administración</p>
         <a routerLink="/admin" routerLinkActive="active">Panel</a>
         <a routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a>
@@ -21,19 +21,19 @@
       </ng-container>
 
       <!-- MOZO -->
-      <ng-container *ngIf="role==='MOZO'">
+      <ng-container *ngIf="(role$ | async)==='MOZO'">
         <p class="section">Atención</p>
         <a routerLink="/mozo/mesas" routerLinkActive="active">Mesas</a>
       </ng-container>
 
       <!-- COCINA -->
-      <ng-container *ngIf="role==='COCINA'">
+      <ng-container *ngIf="(role$ | async)==='COCINA'">
         <p class="section">Cocina</p>
         <a routerLink="/cocina/pedidos" routerLinkActive="active">Pedidos</a>
       </ng-container>
 
       <!-- CAJA -->
-      <ng-container *ngIf="role==='CAJERO'">
+      <ng-container *ngIf="(role$ | async)==='CAJERO'">
         <p class="section">Caja</p>
         <a routerLink="/cajero/pedido" routerLinkActive="active">Cobros</a>
       </ng-container>
@@ -47,7 +47,7 @@
         <button class="mobile-menu" (click)="toggleSidebar()">☰</button>
         <div class="welcome">
           <span class="email">{{ email }}</span>
-          <span class="role">{{ role }}</span>
+          <span class="role">{{ role$ | async }}</span>
         </div>
       </div>
 

@@ -1,75 +1,68 @@
-<div class="contenedor">
-
+<div class="page-container">
   <div class="form-card">
-
-    <div class="form-header">
-      <h2>Nuevo usuario</h2>
-      <p>Crear cuenta para acceso al sistema</p>
-    </div>
+    <header class="form-header" style="margin-bottom: 32px; text-align: center;">
+      <h2 style="font-size: 24px; font-weight: 700; color: var(--text-main);">Nuevo Usuario</h2>
+      <p style="color: var(--text-muted); font-size: 14px;">Completa los datos para registrar un nuevo acceso</p>
+    </header>
 
     <form (ngSubmit)="crearUsuario()" #f="ngForm">
-
-      <div class="campo">
-        <label>Nombre</label>
+      <div class="form-group">
+        <label>Nombre Completo</label>
         <input
+          class="form-input"
           type="text"
           [(ngModel)]="usuario.nombre"
           name="nombre"
+          placeholder="Ej. Juan Pérez"
           required>
       </div>
 
-      <div class="campo">
-        <label>Email</label>
+      <div class="form-group">
+        <label>Correo Electrónico</label>
         <input
+          class="form-input"
           type="email"
           [(ngModel)]="usuario.email"
           name="email"
+          placeholder="correo@ejemplo.com"
           required>
       </div>
 
-      <div class="campo">
+      <div class="form-group">
         <label>Contraseña</label>
         <input
+          class="form-input"
           type="password"
           [(ngModel)]="usuario.password"
           name="password"
+          placeholder="Mínimo 6 caracteres"
           required>
       </div>
 
-      <div class="campo">
-        <label>Rol</label>
+      <div class="form-group">
+        <label>Rol del Sistema</label>
         <select
+          class="form-input"
           [(ngModel)]="usuario.rol"
           name="rol"
           required>
-
-          <option value="" disabled selected>
-            Seleccionar rol
-          </option>
-
-          <option *ngFor="let r of roles" [value]="r">
-            {{ r }}
-          </option>
-
+          <option value="" disabled selected>Selecciona un rol</option>
+          <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
         </select>
       </div>
 
-      <div class="button-group">
+      <div class="btn-group">
         <button
           type="submit"
-          class="btn-primario"
+          class="btn btn-primary"
           [disabled]="f.invalid">
-          Crear usuario
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="16" y1="11" x2="22" y2="11"></line></svg>
+          Registrar Usuario
         </button>
-
-        <a routerLink="/admin/usuarios" class="btn-secundario">
-          Ver lista de usuarios
+        <a routerLink="/admin/usuarios" class="btn btn-secondary">
+          Cancelar
         </a>
       </div>
-
     </form>
-
   </div>
-
 </div>
-

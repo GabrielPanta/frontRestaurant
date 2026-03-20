@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Pedido } from '../models/pedido.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedidoService {
 
-  private apiUrl = 'http://localhost:8080/pedidos';
+  private apiUrl = `${environment.apiUrl}/pedidos`;
 
   constructor(private http: HttpClient) {}
 
@@ -56,7 +57,7 @@ export class PedidoService {
   }
 
   crearPedidoConItems(request: any) {
-    return this.http.post('http://localhost:8080/pedidos', request);
+    return this.http.post(this.apiUrl, request);
   }
 
   pedidosPorEstado(estado: string) {

@@ -1,48 +1,71 @@
-<div class="card">
-  <h2>Gestión de Platos del Menú</h2>
+<div class="page-container">
+  <header class="page-header">
+    <h2>Gestión de Carta</h2>
+  </header>
 
-  <form [formGroup]="form" (ngSubmit)="guardar()" class="form-grid">
-    <input type="text" placeholder="Nombre del plato" formControlName="nombre">
-    <input type="number" placeholder="Precio" formControlName="precio">
+  <div class="form-card" style="max-width: 100%; margin-bottom: 32px;">
+    <h3 style="margin-bottom: 20px; font-size: 18px;">{{ editando ? 'Editar Plato' : 'Añadir Nuevo Plato' }}</h3>
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div class="form-group">
+          <label>Nombre del Plato</label>
+          <input type="text" class="form-input" placeholder="Nombre completo" formControlName="nombre">
+        </div>
+        <div class="form-group">
+          <label>Precio Unitario (S/)</label>
+          <input type="number" class="form-input" placeholder="0.00" formControlName="precio">
+        </div>
+        <div class="form-group" style="display: flex; align-items: flex-end; padding-bottom: 12px;">
+          <label class="form-checkbox">
+            <input type="checkbox" formControlName="disponible">
+            <span>Disponible para venta</span>
+          </label>
+        </div>
+      </div>
 
-    <label class="checkbox">
-      <input type="checkbox" formControlName="disponible">
-      Disponible para la venta
-    </label>
+      <div class="btn-group" style="justify-content: flex-start; max-width: 400px;">
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          {{ editando ? 'Actualizar' : 'Guardar Plato' }}
+        </button>
+        <button type="button" class="btn btn-secondary" *ngIf="editando" (click)="cancelar()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
 
-    <div class="buttons">
-      <button type="submit">
-        {{ editando ? 'Actualizar Plato' : 'Registrar Plato' }}
-      </button>
-      <button type="button" *ngIf="editando" (click)="cancelar()">Cancelar</button>
-    </div>
-  </form>
-</div>
-
-<div class="card">
-  <h3>Platos registrados</h3>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Precio</th>
-        <th>Disponible</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of items">
-        <td>{{ item.nombre }}</td>
-        <td>S/ {{ item.precio | number:'1.2-2' }}</td>
-        <td>{{ item.disponible ? 'Sí' : 'No' }}</td>
-        <td>
-          <button (click)="editar(item)">Editar</button>
-          <button (click)="eliminar(item.id)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="data-table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Plato</th>
+          <th>Precio</th>
+          <th>Estado</th>
+          <th style="text-align: right;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items">
+          <td><strong>{{ item.nombre }}</strong></td>
+          <td>S/ {{ item.precio | number:'1.2-2' }}</td>
+          <td>
+            <span class="badge" [ngClass]="item.disponible ? 'badge-success' : 'badge-warning'">
+              {{ item.disponible ? 'Disponible' : 'Agotado' }}
+            </span>
+          </td>
+          <td style="text-align: right;">
+            <button class="btn btn-info" style="padding: 6px 12px; margin-right: 8px;" (click)="editar(item)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            </button>
+            <button class="btn btn-danger" style="padding: 6px 12px;" (click)="eliminar(item.id)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 

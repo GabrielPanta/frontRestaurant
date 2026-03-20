@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../models/auth.models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:8080/auth';
+  private apiUrl = `${environment.apiUrl}/auth`;
   private roleSubject = new BehaviorSubject<string | null>(this.getRole());
 
   role$ = this.roleSubject.asObservable();
@@ -42,8 +43,8 @@ export class AuthService {
   }
   
   isAdmin(): boolean {
-  return localStorage.getItem('role') === 'ADMIN';
-}
+    return this.getRole() === 'ADMIN';
+  }
 
 
 }

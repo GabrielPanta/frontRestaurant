@@ -1,46 +1,74 @@
 <div class="estadisticas">
-  <div class="header">
-    <h2>Panel de estadísticas</h2>
-    <span class="fecha">Hoy</span>
+  <header class="header">
+    <div class="title-area">
+      <h1>Panel de Estadísticas</h1>
+      <p class="subtitle">Resumen de rendimiento para el día de hoy</p>
+    </div>
+    <div class="date-badge">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      <span>Hoy, {{ today | date:'mediumDate' }}</span>
+    </div>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card sales">
+      <div class="stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      </div>
+      <div class="stat-info">
+        <span class="label">Ventas de Hoy</span>
+        <h2 class="value">S/ {{ totalVentasHoy | number:'1.2-2' }}</h2>
+      </div>
+      <div class="stat-trend positive">
+        <span>+12% vs ayer</span>
+      </div>
+    </div>
+
+    <div class="stat-card orders">
+      <div class="stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      </div>
+      <div class="stat-info">
+        <span class="label">Pedidos Totales</span>
+        <h2 class="value">{{ cantidadPedidos }}</h2>
+      </div>
+      <div class="stat-trend neutral">
+        <span>Estable</span>
+      </div>
+    </div>
+
+    <div class="stat-card ticket">
+      <div class="stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5 4 4"></path><path d="M13 7 8.7 2.7a2 2 0 0 0-2.8 0L3.3 5.3a2 2 0 0 0 0 2.8L7.6 12.3a2 2 0 0 0 2.8 0l4.3-4.3a2 2 0 0 0 0-2.8Z"></path><path d="m7 7 9.3 9.3a2 2 0 0 1 0 2.8l-2.6 2.6a2 2 0 0 1-2.8 0L1.7 12.3a2 2 0 0 1 0-2.8l2.6-2.6a2 2 0 0 1 2.8 0Z"></path><path d="m14 14 5.3 5.3a2 2 0 0 1 0 2.8l-2.6 2.6a2 2 0 0 1-2.8 0L8.6 19.4a2 2 0 0 1 0-2.8l2.6-2.6a2 2 0 0 1 2.8 0Z"></path></svg>
+      </div>
+      <div class="stat-info">
+        <span class="label">Ticket Promedio</span>
+        <h2 class="value">S/ {{ ticketPromedio | number:'1.2-2' }}</h2>
+      </div>
+      <div class="stat-trend positive">
+        <span>+5%</span>
+      </div>
+    </div>
   </div>
 
-  <div class="resumen-grid">
-    <div class="resumen-card ventas">
-      <div class="titulo">Ventas de hoy</div>
-      <div class="valor">S/ {{ totalVentasHoy }}</div>
+  <section class="main-content">
+    <div class="chart-container">
+      <div class="chart-header">
+        <h3>Productos más vendidos</h3>
+        <p>Ranking basado en cantidad de unidades</p>
+      </div>
+      <div class="ranking-list">
+        <div class="ranking-item" *ngFor="let p of productos; let i = index">
+          <div class="item-info">
+            <span class="rank">#{{ i + 1 }}</span>
+            <span class="name">{{ p.nombre }}</span>
+            <span class="count">{{ p.cantidad }} unid.</span>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" [style.width.%]="getPorcentaje(p.cantidad)"></div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="resumen-card pedidos">
-      <div class="titulo">Pedidos</div>
-      <div class="valor">{{ cantidadPedidos }}</div>
-    </div>
-
-    <div class="resumen-card ticket">
-      <div class="titulo">Ticket promedio</div>
-      <div class="valor">S/ {{ ticketPromedio }}</div>
-    </div>
-  </div>
-
-  <div class="tabla-card">
-    <div class="tabla-header">
-      <h3>Productos más vendidos</h3>
-    </div>
-
-    <div class="tabla-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of productos">
-            <td>{{ p.nombre }}</td>
-            <td class="cantidad">{{ p.cantidad }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  </section>
 </div>

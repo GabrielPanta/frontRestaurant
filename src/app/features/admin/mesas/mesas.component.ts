@@ -127,7 +127,6 @@ export class MesasComponent implements OnInit {
     if (!this.mesaSeleccionada) return;
 
     if (!this.pedidoActivo) {
-
       const request = {
         mesaId: this.mesaSeleccionada.id,
         items: [
@@ -139,10 +138,19 @@ export class MesasComponent implements OnInit {
       };
 
       this.pedidoService.crearPedidoConItems(request).subscribe({
-        next: pedido => {
+        next: (pedido: any) => {
           this.pedidoActivo = pedido;
           this.cargarItemsPedido();
           this.cargarMesas();
+          
+          // ASEGURAR VISIBILIDAD EN COCINA:
+          // Forzamos el estado EN_PREPARACION para pedidos nuevos (según backend Enum)
+          this.pedidoService.cambiarEstado(pedido.id, 'EN_PREPARACION').subscribe({
+            next: () => {
+              this.pedidoActivo.estado = 'EN_PREPARACION';
+              this.cargarMesas();
+            }
+          });
         },
         error: err => {
           alert(err.error?.message || 'Error al crear pedido');
@@ -158,6 +166,16 @@ export class MesasComponent implements OnInit {
       1
     ).subscribe(() => {
       this.cargarItemsPedido();
+      
+      // FORZAR REGRESO A COCINA: Siempre nos aseguramos de que el estado sea EN_PREPARACION 
+      // al añadir platos nuevos, eliminando la dependencia del estado local.
+      this.pedidoService.cambiarEstado(this.pedidoActivo.id, 'EN_PREPARACION').subscribe({
+        next: () => {
+          this.pedidoActivo.estado = 'EN_PREPARACION';
+          this.cargarMesas(); 
+        },
+        error: () => this.cargarMesas()
+      });
     });
   }
 
