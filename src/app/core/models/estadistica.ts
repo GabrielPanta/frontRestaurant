@@ -1,10 +1,11 @@
 export interface ProductoMasVendido {
-nombre: string;
-cantidad: number;
+  nombre: string;
+  cantidad: number;
 }
 
 export interface VentaDiaria {
-totalVentas: number;
-ticketPromedio: number;
-cantidadPedidos: number;
+  totalVentas: number;
+  ticketPromedio: number;
+  cantidadPedidos: number;
+  fecha?: string;
 }

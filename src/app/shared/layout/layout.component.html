@@ -1,4 +1,7 @@
 <div class="layout">
+  <!-- Overlay for Mobile -->
+  <div class="sidebar-overlay" [class.active]="sidebarCollapsed" (click)="toggleSidebar()"></div>
+
   <!-- Sidebar -->
   <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
     <div class="sidebar-header">
@@ -11,31 +14,61 @@
       <!-- ADMIN -->
       <ng-container *ngIf="(role$ | async)==='ADMIN'">
         <p class="section">Administración</p>
-        <a routerLink="/admin" routerLinkActive="active">Panel</a>
-        <a routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a>
-        <a routerLink="/admin/menu" routerLinkActive="active">Platos</a>
-        <a routerLink="/admin/mesas" routerLinkActive="active">Mesas</a>
-        <a routerLink="/admin/pedidos" routerLinkActive="active">Pedidos Cocina</a>
-        <a routerLink="/admin/pedido" routerLinkActive="active">Cobros</a>
-        <a routerLink="/admin/estadisticas" routerLinkActive="active">Estadísticas</a>
+        <a routerLink="/admin" routerLinkActive="active" title="Panel">
+          <span class="m-icon">🏠</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Panel</span>
+        </a>
+        <a routerLink="/admin/usuarios" routerLinkActive="active" title="Usuarios">
+          <span class="m-icon">👥</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Usuarios</span>
+        </a>
+        <a routerLink="/admin/menu" routerLinkActive="active" title="Platos">
+          <span class="m-icon">🍴</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Platos</span>
+        </a>
+        <a routerLink="/admin/mesas" routerLinkActive="active" title="Mesas">
+          <span class="m-icon">🪑</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Mesas</span>
+        </a>
+        <a routerLink="/admin/pedidos" routerLinkActive="active" title="Cocina">
+          <span class="m-icon">🍳</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Pedidos Cocina</span>
+        </a>
+        <a routerLink="/admin/pedido" routerLinkActive="active" title="Cobros">
+          <span class="m-icon">💰</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Cobros</span>
+        </a>
+        <a routerLink="/admin/estadisticas" routerLinkActive="active" title="Estadísticas">
+          <span class="m-icon">📊</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Estadísticas</span>
+        </a>
       </ng-container>
 
       <!-- MOZO -->
       <ng-container *ngIf="(role$ | async)==='MOZO'">
         <p class="section">Atención</p>
-        <a routerLink="/mozo/mesas" routerLinkActive="active">Mesas</a>
+        <a routerLink="/mozo/mesas" routerLinkActive="active" title="Mesas">
+          <span class="m-icon">🪑</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Mesas</span>
+        </a>
       </ng-container>
 
       <!-- COCINA -->
       <ng-container *ngIf="(role$ | async)==='COCINA'">
         <p class="section">Cocina</p>
-        <a routerLink="/cocina/pedidos" routerLinkActive="active">Pedidos</a>
+        <a routerLink="/cocina/pedidos" routerLinkActive="active" title="Pedidos">
+          <span class="m-icon">🍳</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Pedidos</span>
+        </a>
       </ng-container>
 
       <!-- CAJA -->
       <ng-container *ngIf="(role$ | async)==='CAJERO'">
         <p class="section">Caja</p>
-        <a routerLink="/cajero/pedido" routerLinkActive="active">Cobros</a>
+        <a routerLink="/cajero/pedido" routerLinkActive="active" title="Cobros">
+          <span class="m-icon">💰</span>
+          <span class="m-label" *ngIf="!sidebarCollapsed">Cobros</span>
+        </a>
       </ng-container>
     </nav>
   </aside>

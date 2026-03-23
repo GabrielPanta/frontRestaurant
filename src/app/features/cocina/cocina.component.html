@@ -1,55 +1,56 @@
-<div class="cocina-container">
-
-  <div class="header">
-    <h2>Cocina</h2>
-    <div class="contador">
-      {{ pedidos.length }} pedidos en preparación
+<div class="kds-container">
+  <!-- Header -->
+  <header class="kds-header">
+    <div class="brand">
+      <span class="icon">🍳</span>
+      <h1>KDS System</h1>
     </div>
+    <div class="kds-stats">
+      <div class="stat-item">
+        <span class="label">Pendientes</span>
+        <span class="value">{{ pedidos.length }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Empty State -->
+  <div *ngIf="pedidos.length === 0" class="kds-empty">
+    <div class="celebrate">✨</div>
+    <h2>¡Cocina al día!</h2>
+    <p>No hay pedidos pendientes en este momento.</p>
   </div>
 
-  <div *ngIf="pedidos.length === 0" class="sin-pedidos">
-    No hay pedidos en preparación
-  </div>
-
-  <div class="pedidos-grid">
-
-    <div class="pedido-card" *ngFor="let pedido of pedidos">
-
-      <div class="pedido-header">
-        <div class="pedido-info">
-          <span class="pedido-id">#{{ pedido.id }}</span>
-          <span class="mesa">Mesa {{ pedido.mesa.numero }}</span>
+  <!-- Grid de Pedidos -->
+  <div class="kds-grid">
+    <div class="kds-ticket" 
+         *ngFor="let pedido of pedidos"
+         [ngClass]="getEstadoClase(pedido.fecha)">
+      
+      <header class="ticket-header">
+        <div class="id-area">
+          <span class="order-id">#{{ pedido.id }}</span>
+          <span class="mesa-badge">Mesa {{ pedido.mesa.numero }}</span>
         </div>
-
-        <div class="estado">
-          En preparación
+        <div class="timer">
+          <span class="clock">⏱️</span>
+          {{ getMinutosTranscurridos(pedido.fecha) }} min
         </div>
-      </div>
+      </header>
 
-      <div class="items">
-        <ng-container *ngFor="let item of detalles[pedido.id] || []">
-          <div class="item" *ngIf="item.estado !== 'LISTO'">
-            <span class="nombre">
-              {{ item.menuItem.nombre }}
-            </span>
+      <section class="ticket-body">
+        <div class="item-row" *ngFor="let item of detalles[pedido.id] || []">
+          <ng-container *ngIf="item.estado !== 'LISTO'">
+            <div class="qty">{{ item.cantidad }}</div>
+            <div class="name">{{ item.menuItem.nombre }}</div>
+          </ng-container>
+        </div>
+      </section>
 
-            <span class="cantidad">
-              x{{ item.cantidad }}
-            </span>
-          </div>
-        </ng-container>
-      </div>
-
-      <button
-        class="btn-listo"
-        (click)="marcarListo(pedido.id)">
-        Marcar listo
-      </button>
-
+      <footer class="ticket-footer">
+        <button class="btn-complete" (click)="marcarListo(pedido.id)">
+          MARCAR LISTO
+        </button>
+      </footer>
     </div>
-
   </div>
 </div>
-
-
-

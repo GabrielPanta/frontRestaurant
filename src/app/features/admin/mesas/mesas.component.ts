@@ -144,7 +144,6 @@ export class MesasComponent implements OnInit {
           this.cargarMesas();
           
           // ASEGURAR VISIBILIDAD EN COCINA:
-          // Forzamos el estado EN_PREPARACION para pedidos nuevos (según backend Enum)
           this.pedidoService.cambiarEstado(pedido.id, 'EN_PREPARACION').subscribe({
             next: () => {
               this.pedidoActivo.estado = 'EN_PREPARACION';
@@ -167,8 +166,6 @@ export class MesasComponent implements OnInit {
     ).subscribe(() => {
       this.cargarItemsPedido();
       
-      // FORZAR REGRESO A COCINA: Siempre nos aseguramos de que el estado sea EN_PREPARACION 
-      // al añadir platos nuevos, eliminando la dependencia del estado local.
       this.pedidoService.cambiarEstado(this.pedidoActivo.id, 'EN_PREPARACION').subscribe({
         next: () => {
           this.pedidoActivo.estado = 'EN_PREPARACION';

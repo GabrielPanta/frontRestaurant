@@ -1,42 +1,101 @@
-<div class="cajero-container">
-    <h2>Panel de Caja</h2>
-    <div *ngIf="pedidos.length === 0" class="mensaje-vacio">
-        No hay pedidos listos para cobrar </div>
-    <div class="pedido-card" *ngFor="let pedido of pedidos">
+<div class="pos-container" [class.loading]="loading">
+  
+  <!-- BARRA LATERAL IZQUIERDA: PEDIDOS PENDIENTES -->
+  <aside class="pos-sidebar">
+    <header class="section-header">
+      <h2>Pedidos Listos</h2>
+      <span class="badge">{{ pedidos.length }} pendientes</span>
+    </header>
 
-        <h3>
-            Pedido #{{ pedido.id }} |
-            Mesa {{ pedido.mesa?.numero }}
-        </h3>
+    <div class="orders-list">
+      <div *ngIf="pedidos.length === 0" class="empty-state">
+        <div class="icon">✨</div>
+        <p>No hay cobros pendientes</p>
+      </div>
 
-        <table class="tabla-detalles">
+      <div class="order-item" 
+           *ngFor="let pedido of pedidos" 
+           [class.active]="pedidoSeleccionado?.id === pedido.id"
+           (click)="seleccionarPedido(pedido)">
+        <div class="order-info">
+          <span class="mesa-num">Mesa {{ pedido.mesa?.numero }}</span>
+          <span class="pedido-id">#{{ pedido.id }}</span>
+        </div>
+        <div class="order-total">
+          S/ {{ pedido.total | number:'1.2-2' }}
+        </div>
+      </div>
+    </div>
+  </aside>
 
+  <!-- AREA PRINCIPAL: TICKET DE VENTA -->
+  <main class="pos-main">
+    <div *ngIf="!pedidoSeleccionado" class="no-selection">
+      <div class="pos-logo">💵</div>
+      <h3>Selecciona un pedido para cobrar</h3>
+      <p>Los pedidos que aparecen aquí ya han sido atendidos y están listos para el pago final.</p>
+    </div>
+
+    <div *ngIf="pedidoSeleccionado" class="ticket-container">
+      <div class="ticket-card">
+        <header class="ticket-header">
+          <div class="brand">Restaurante POS</div>
+          <div class="ticket-info">
+            <span>Ticket: #{{ pedidoSeleccionado.id }}</span>
+            <span>Mesa: {{ pedidoSeleccionado.mesa?.numero }}</span>
+          </div>
+        </header>
+
+        <section class="ticket-body">
+          <table class="items-table">
             <thead>
-                <tr>
-                    <th>Plato</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Subtotal</th>
-                </tr>
+              <tr>
+                <th>Plato</th>
+                <th class="center">Cant</th>
+                <th class="right">Precio</th>
+                <th class="right">Subtotal</th>
+              </tr>
             </thead>
-
             <tbody>
-                <tr *ngFor="let item of detalles[pedido.id]">
-                    <td>{{ item.menuItem?.nombre }}</td>
-                    <td>{{ item.cantidad }}</td>
-                    <td>S/ {{ item.precio }}</td>
-                    <td>S/ {{ item.precio * item.cantidad }}</td>
-                </tr>
+              <tr *ngFor="let item of detalles[pedidoSeleccionado.id]">
+                <td>{{ item.menuItem?.nombre }}</td>
+                <td class="center">{{ item.cantidad }}</td>
+                <td class="right">{{ item.precio | number:'1.2-2' }}</td>
+                <td class="right">{{ (item.precio * item.cantidad) | number:'1.2-2' }}</td>
+              </tr>
             </tbody>
+          </table>
+        </section>
 
-        </table>
+        <footer class="ticket-footer">
+          <div class="summary-line">
+            <span>Subtotal</span>
+            <span>S/ {{ (pedidoSeleccionado.total * 0.82) | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-line">
+            <span>IGV (18%)</span>
+            <span>S/ {{ (pedidoSeleccionado.total * 0.18) | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-line total">
+            <span>TOTAL A COBRAR</span>
+            <span>S/ {{ pedidoSeleccionado.total | number:'1.2-2' }}</span>
+          </div>
+        </footer>
 
-        <div class="total">
-            Total: S/ {{ pedido.total }}
+        <div class="payment-methods">
+          <p>Método de Pago</p>
+          <div class="methods-grid">
+            <button class="method-btn active">💵 Efectivo</button>
+            <button class="method-btn">💳 Tarjeta</button>
+            <button class="method-btn">📱 Yape/Plin</button>
+          </div>
         </div>
 
-        <button class="btn-cerrar" (click)="cerrarPedido(pedido.id)">
-            Cobrar y cerrar pedido
+        <button class="btn-confirm-pay" (click)="cerrarPedido(pedidoSeleccionado.id)">
+          Confirmar y Cerrar Pedido
         </button>
+      </div>
     </div>
+  </main>
+
 </div>

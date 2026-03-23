@@ -3,41 +3,68 @@ import { CommonModule } from '@angular/common';
 import { PedidoService } from '../../core/services/pedido.service';
 
 @Component({
-standalone: true,
-imports: [CommonModule],
-templateUrl: './cajero.component.html',
-styleUrls: ['./cajero.component.css']
+  selector: 'app-cajero',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './cajero.component.html',
+  styleUrls: ['./cajero.component.css']
 })
 export class CajeroComponent implements OnInit {
 
-pedidos: any[] = [];
-detalles: { [key: number]: any[] } = {};
+  pedidos: any[] = [];
+  detalles: { [key: number]: any[] } = {};
+  pedidoSeleccionado: any = null;
+  loading = false;
 
-constructor(private pedidoService: PedidoService) {}
+  constructor(private pedidoService: PedidoService) {}
 
-ngOnInit(): void {
-this.cargarPedidos();
-setInterval(() => this.cargarPedidos(), 5000);
-}
+  ngOnInit(): void {
+    this.cargarPedidos();
+    // Actualización silenciosa cada 10 segundos
+    setInterval(() => this.cargarPedidos(true), 10000);
+  }
 
-cargarPedidos() {
-this.pedidoService.pedidosPorEstado('LISTO')
-.subscribe(data => {
-this.pedidos = data;
-data.forEach(p => this.cargarDetalles(p.id));
-});
-}
+  cargarPedidos(silencioso = false) {
+    if (!silencioso) this.loading = true;
+    this.pedidoService.pedidosPorEstado('LISTO').subscribe({
+      next: data => {
+        this.pedidos = data;
+        this.loading = false;
+        // Auto-selección si hay pedidos y ninguno está seleccionado
+        if (data.length > 0 && !this.pedidoSeleccionado) {
+          this.seleccionarPedido(data[0]);
+        }
+        data.forEach(p => this.cargarDetalles(p.id));
+      },
+      error: () => this.loading = false
+    });
+  }
 
-cargarDetalles(pedidoId: number) {
-this.pedidoService.obtenerDetalles(pedidoId)
-.subscribe(items => {
-this.detalles[pedidoId] = items;
-});
-}
+  seleccionarPedido(pedido: any) {
+    this.pedidoSeleccionado = pedido;
+    if (!this.detalles[pedido.id]) {
+      this.cargarDetalles(pedido.id);
+    }
+  }
 
-cerrarPedido(pedidoId: number) {
-this.pedidoService.cerrarPedido(pedidoId)
-.subscribe(() => this.cargarPedidos());
-}
+  cargarDetalles(pedidoId: number) {
+    this.pedidoService.obtenerDetalles(pedidoId).subscribe({
+      next: items => {
+        this.detalles[pedidoId] = items;
+      },
+      error: err => console.error('Error cargando detalles del pedido', err)
+    });
+  }
 
+  cerrarPedido(pedidoId: number) {
+    if (!confirm('¿Confirmar cobro y cierre de pedido?')) return;
+    
+    this.pedidoService.cerrarPedido(pedidoId).subscribe({
+      next: () => {
+        this.pedidoSeleccionado = null;
+        this.cargarPedidos();
+      },
+      error: err => alert(err.error?.message || 'Error al cerrar el pedido')
+    });
+  }
 }

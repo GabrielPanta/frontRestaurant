@@ -13,15 +13,17 @@ export class CocinaComponent implements OnInit, OnDestroy {
   pedidos: any[] = [];
   detalles: { [key: number]: any[] } = {};
   intervalo: any;
+  ahora: number = Date.now();
 
   constructor(private pedidoService: PedidoService) {}
 
   ngOnInit(): void {
     this.cargarPedidos();
 
-    // refresco cada 5 segundos (tiempo real cocina)
+    // Refresco de datos cada 5 segundos
     this.intervalo = setInterval(() => {
       this.cargarPedidos();
+      this.ahora = Date.now(); // Actualizar referencia de tiempo para los colores
     }, 5000);
   }
 
@@ -38,30 +40,34 @@ export class CocinaComponent implements OnInit, OnDestroy {
           this.pedidos = data;
           data.forEach(p => this.cargarDetalles(p.id));
         },
-        error: err => {
-          console.error('Error cargando pedidos cocina', err);
-        }
+        error: err => console.error('Error cargando cocina', err)
       });
   }
 
   cargarDetalles(pedidoId: number) {
     this.pedidoService.obtenerDetalles(pedidoId)
-      .subscribe({
-        next: items => {
-          this.detalles[pedidoId] = items;
-        },
-        error: err => {
-          console.error('Error cargando detalles', err);
-        }
+      .subscribe(items => {
+        this.detalles[pedidoId] = items;
       });
+  }
+
+  getMinutosTranscurridos(fechaStr: string): number {
+    if (!fechaStr) return 0;
+    const fechaPedido = new Date(fechaStr).getTime();
+    const diff = this.ahora - fechaPedido;
+    return Math.floor(diff / 60000); // 60,000 ms en un minuto
+  }
+
+  getEstadoClase(fechaStr: string): string {
+    const mins = this.getMinutosTranscurridos(fechaStr);
+    if (mins < 10) return 'color-low';
+    if (mins < 20) return 'color-medium';
+    return 'color-high';
   }
 
   marcarListo(pedidoId: number) {
     this.pedidoService.cambiarEstado(pedidoId, 'LISTO')
-      .subscribe({
-        next: () => this.cargarPedidos(),
-        error: err => console.error('Error cambiando estado', err)
-      });
+      .subscribe(() => this.cargarPedidos());
   }
 }
 

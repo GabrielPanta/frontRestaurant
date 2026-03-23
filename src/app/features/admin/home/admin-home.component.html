@@ -1,0 +1,107 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="welcome-text">
+      <h1>Panel de Control</h1>
+      <p>Bienvenido al centro de mando de tu restaurante</p>
+    </div>
+    <div class="date-badge" *ngIf="stats.fecha">
+      📅 {{ stats.fecha | date:'fullDate' }}
+    </div>
+  </header>
+
+  <!-- KPI Cards -->
+  <div class="stats-grid">
+    <div class="stat-card sales">
+      <div class="icon">💰</div>
+      <div class="info">
+        <span class="label">Ventas de Hoy</span>
+        <span class="value">S/ {{ stats.totalVentas | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card orders">
+      <div class="icon">📝</div>
+      <div class="info">
+        <span class="label">Pedidos Realizados</span>
+        <span class="value">{{ stats.cantidadPedidos }}</span>
+      </div>
+    </div>
+
+    <div class="stat-card occupancy">
+      <div class="icon">🪑</div>
+      <div class="info">
+        <span class="label">Ocupación</span>
+        <span class="value">{{ porcentajeOcupacion }}%</span>
+        <div class="mini-bar">
+          <div class="fill" [style.width.%]="porcentajeOcupacion"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card ticket">
+      <div class="icon">🎫</div>
+      <div class="info">
+        <span class="label">Ticket Promedio</span>
+        <span class="value">S/ {{ stats.ticketPromedio | number:'1.2-2' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <div class="main-layout">
+    <!-- Quick Actions -->
+    <section class="actions-section">
+      <h3>Acciones Rápidas</h3>
+      <div class="actions-grid">
+        <a routerLink="/admin/mesas" class="action-card mesas">
+          <span class="icon">🍽️</span>
+          <span class="title">Gestionar Mesas</span>
+          <span class="desc">{{ mesasLibres }} de {{ totalMesas }} disponibles</span>
+        </a>
+        
+        <a routerLink="/admin/pedidos" class="action-card kitchen">
+          <span class="icon">🍳</span>
+          <span class="title">Ver Cocina</span>
+          <span class="desc">Monitoreo de producción</span>
+        </a>
+
+        <a routerLink="/admin/pedido" class="action-card cash">
+          <span class="icon">💵</span>
+          <span class="title">Caja y Cobros</span>
+          <span class="desc">Cierre y arqueo</span>
+        </a>
+
+        <a routerLink="/admin/estadisticas" class="action-card reports">
+          <span class="icon">📊</span>
+          <span class="title">Reportes Detallados</span>
+          <span class="desc">Análisis avanzado</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Detailed Status (Optional sidebar or section) -->
+    <section class="status-section">
+      <div class="card summary-card">
+        <h3>Resumen de Salón</h3>
+        <ul class="summary-list">
+          <li>
+            <span class="dot libre"></span>
+            <span class="text">Mesas Libres</span>
+            <span class="count">{{ mesasLibres }}</span>
+          </li>
+          <li>
+            <span class="dot ocupada"></span>
+            <span class="text">Mesas Ocupadas</span>
+            <span class="count">{{ mesasOcupadas }}</span>
+          </li>
+          <li>
+            <span class="dot reservada"></span>
+            <span class="text">Reservadas</span>
+            <span class="count">{{ mesas.length - mesasLibres - mesasOcupadas }}</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>
