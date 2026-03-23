@@ -33,6 +33,15 @@ export class MesasComponent implements OnInit {
   };
 
   esAdmin = false;
+  filtroPlato: string = '';
+
+  get platosFiltrados() {
+    if (!this.filtroPlato) return this.platos;
+    const filter = this.filtroPlato.toLowerCase();
+    return this.platos.filter(plato => 
+      plato.nombre.toLowerCase().includes(filter)
+    );
+  }
 
   constructor(
     private mesaService: MesaService,
@@ -194,6 +203,11 @@ export class MesasComponent implements OnInit {
     this.pedidoService.listarItems(this.pedidoActivo.id).subscribe({
       next: items => {
         this.itemsPedido = items;
+        // Recalcular total localmente para actualización instantánea
+        if (this.pedidoActivo) {
+          const total = items.reduce((acc: number, item: any) => acc + (item.precio * item.cantidad), 0);
+          this.pedidoActivo.total = total;
+        }
       },
       error: err => {
         console.error('Error cargando items', err);
@@ -212,12 +226,16 @@ export class MesasComponent implements OnInit {
 }
 
 
- cerrarModal() {
-  this.mesaSeleccionada = null;
-  this.itemsPedido = [];
-}
+  cerrarModal() {
+    this.mesaSeleccionada = null;
+    this.itemsPedido = [];
+    this.filtroPlato = '';
+  }
 
 
+  imprimirTicket() {
+    window.print();
+  }
 }
 
 

@@ -67,4 +67,8 @@ export class CajeroComponent implements OnInit {
       error: err => alert(err.error?.message || 'Error al cerrar el pedido')
     });
   }
+
+  imprimirTicket() {
+    window.print();
+  }
 }

@@ -395,3 +395,68 @@ input, select, textarea {
   justify-content: flex-end;
   gap: 12px;
 }
+
+/* GLOBAL PRINT STYLES */
+@media print {
+  @page {
+    margin: 0;
+    size: auto;
+  }
+
+  /* Hide app-wide UI elements */
+  header, nav, footer, .page-header, .no-print, .admin-actions, .status-grid, .btn-close {
+    display: none !important;
+  }
+
+  /* Visibility trick: hide everything else but the tickets */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* Show only the actual tickets and their content */
+  .ticket-printable, 
+  .ticket-printable *,
+  .ticket-card,
+  .ticket-card * {
+    visibility: visible !important;
+  }
+
+  /* Positioning and size for the tickets */
+  .ticket-printable, 
+  .ticket-card {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 80mm !important;
+    margin: 0 !important;
+    padding: 10mm !important;
+    background: white !important;
+    border: none !important;
+    box-shadow: none !important;
+    font-family: 'Courier New', Courier, monospace !important;
+  }
+
+  /* Fix for structural elements inside tickets */
+  .ticket-info-grid, 
+  .summary-line-print {
+    display: flex !important;
+    justify-content: space-between !important;
+  }
+
+  /* Tables in tickets */
+  .items-table-print {
+    display: table !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .items-table-print tr {
+    display: table-row !important;
+  }
+
+  .items-table-print th, 
+  .items-table-print td {
+    display: table-cell !important;
+  }
+}

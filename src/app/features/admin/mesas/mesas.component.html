@@ -63,8 +63,18 @@
     <div class="app-modal-body" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
       <div class="menu-section">
         <h4 class="section-title">Nuestra Carta</h4>
+        
+        <div class="search-container" style="margin-bottom: 15px;">
+          <input 
+            type="text" 
+            class="form-input search-input" 
+            placeholder="🔍 Buscar plato..."
+            [(ngModel)]="filtroPlato"
+            style="width: 100%;">
+        </div>
+
         <div class="scroll-list">
-          <div class="list-item" *ngFor="let plato of platos" (click)="agregarPlato(plato)">
+          <div class="list-item" *ngFor="let plato of platosFiltrados" (click)="agregarPlato(plato)">
             <div class="item-info">
               <span class="name">{{ plato.nombre }}</span>
             </div>
@@ -100,17 +110,77 @@
         <span class="label">Total a Pagar</span>
         <span class="value">S/ {{ pedidoActivo?.total || 0 | number:'1.2-2' }}</span>
       </div>
-      <button class="btn btn-primary" (click)="cerrarPedido()" [disabled]="itemsPedido.length === 0">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-        Confirmar y Cerrar Mesa
-      </button>
+      
+      <div style="display: flex; gap: 10px;">
+        <button class="btn no-print" (click)="imprimirTicket()" [disabled]="itemsPedido.length === 0" style="background: #64748b; color: white;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          Ticket
+        </button>
+
+        <button class="btn btn-primary no-print" (click)="cerrarPedido()" [disabled]="itemsPedido.length === 0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          Confirmar y Cerrar Mesa
+        </button>
+      </div>
     </footer>
   </div>
 </div>
 
+<!-- SECCION DE TICKET PARA IMPRESIÓN (REALISTA) -->
+<div class="ticket-printable" *ngIf="pedidoActivo">
+  <div class="ticket-header">
+    <div class="brand">RESTOBAR GUSTO</div>
+    <div class="restaurant-info">
+      <p>Av. Principal 123 - Lima</p>
+      <p>RUC: 20123456789 | Tlf: (01) 456-7890</p>
+    </div>
+    <div class="divider">===============================</div>
+    <div class="ticket-info-grid">
+      <span>Ticket: #{{ pedidoActivo.id }}</span>
+      <span>Mesa: {{ mesaSeleccionada?.numero }}</span>
+      <span>Fecha: {{ pedidoActivo.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+      <span>Estado: PRE-CUENTA</span>
+    </div>
+    <div class="divider">-------------------------------</div>
+  </div>
 
+  <section class="ticket-body">
+    <table class="items-table-print">
+      <thead>
+        <tr>
+          <th align="left">DESCRIPCION</th>
+          <th align="center">CNT</th>
+          <th align="right">SUBT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of itemsPedido">
+          <td>{{ item.menuItem?.nombre }}</td>
+          <td align="center">{{ item.cantidad }}</td>
+          <td align="right">{{ (item.precio * item.cantidad) | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 
-
-    
-      
-     
+  <footer class="ticket-footer">
+    <div class="divider">-------------------------------</div>
+    <div class="summary-line-print">
+      <span>OP. GRAVADA</span>
+      <span>S/ {{ (pedidoActivo.total * 0.82) | number:'1.2-2' }}</span>
+    </div>
+    <div class="summary-line-print">
+      <span>I.G.V. (18%)</span>
+      <span>S/ {{ (pedidoActivo.total * 0.18) | number:'1.2-2' }}</span>
+    </div>
+    <div class="summary-line-print total-line">
+      <span>TOTAL A PAGAR</span>
+      <span>S/ {{ pedidoActivo.total | number:'1.2-2' }}</span>
+    </div>
+    <div class="divider">===============================</div>
+    <div class="thanks-msg">
+      <p>¡Gracias por su preferencia!</p>
+      <p>Este no es un comprobante de pago</p>
+    </div>
+  </footer>
+</div>
