@@ -37,16 +37,21 @@ export class EstadisticasComponent implements OnInit, OnDestroy {
   }
 
   cargarDatos() {
-    // Cargar todo y luego renderizar
-    this.estadisticaService.ventasDelDia().subscribe((data) => {
-      this.totalVentasHoy = data.totalVentas;
-      this.ticketPromedio = data.ticketPromedio;
-      this.cantidadPedidos = data.cantidadPedidos;
-      
-      this.estadisticaService.productosMasVendidos().subscribe((productos) => {
-        this.productos = productos;
+    this.estadisticaService.ventasDelDia().subscribe({
+      next: (data) => {
+        this.totalVentasHoy = data?.totalVentas ?? 0;
+        this.ticketPromedio = data?.ticketPromedio ?? 0;
+        this.cantidadPedidos = data?.cantidadPedidos ?? 0;
+      },
+      error: (err) => console.error('Error cargando ventas del día', err)
+    });
+
+    this.estadisticaService.productosMasVendidos().subscribe({
+      next: (productos) => {
+        this.productos = productos || [];
         setTimeout(() => this.renderCharts(), 100);
-      });
+      },
+      error: (err) => console.error('Error cargando productos más vendidos', err)
     });
   }
 

@@ -32,7 +32,14 @@ export class AdminHomeComponent implements OnInit {
     
     // Cargar ventas del día
     this.estadisticaService.ventasDelDia().subscribe({
-      next: data => this.stats = data,
+      next: data => {
+        this.stats = {
+          totalVentas: data?.totalVentas ?? 0,
+          cantidadPedidos: data?.cantidadPedidos ?? 0,
+          ticketPromedio: data?.ticketPromedio ?? 0,
+          fecha: data?.fecha || new Date().toISOString()
+        };
+      },
       error: err => console.error('Error cargando ventas', err)
     });
 

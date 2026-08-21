@@ -40,8 +40,16 @@
       <section class="ticket-body">
         <div class="item-row" *ngFor="let item of detalles[pedido.id] || []">
           <ng-container *ngIf="item.estado !== 'LISTO'">
-            <div class="qty">{{ item.cantidad }}</div>
-            <div class="name">{{ item.menuItem.nombre }}</div>
+            <div class="item-info-wrapper">
+              <div class="item-main">
+                <div class="qty">{{ item.cantidad }}</div>
+                <div class="name">{{ item.menuItem.nombre }}</div>
+              </div>
+              <div class="item-note" *ngIf="item.notas">
+                <span class="note-badge">⚠️ NOTA:</span>
+                <span class="note-text">{{ item.notas }}</span>
+              </div>
+            </div>
           </ng-container>
         </div>
       </section>

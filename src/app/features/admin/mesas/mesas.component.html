@@ -25,7 +25,17 @@
         (click)="abrirPedido(mesa)">
         <div class="number">{{ mesa.numero }}</div>
         <div class="label">{{ mesa.estado }}</div>
-        <div class="active-badge" *ngIf="mesa.estado === 'OCUPADA'">
+        
+        <div class="active-badge pending" *ngIf="mesa.estado === 'OCUPADA' && pedidosPorMesa[mesa.id]?.estado === 'PENDIENTE'">
+          ⏳ Por enviar a cocina
+        </div>
+        <div class="active-badge cooking" *ngIf="mesa.estado === 'OCUPADA' && pedidosPorMesa[mesa.id]?.estado === 'EN_PREPARACION'">
+          🍳 En Cocina
+        </div>
+        <div class="active-badge ready" *ngIf="mesa.estado === 'OCUPADA' && pedidosPorMesa[mesa.id]?.estado === 'LISTO'">
+          🍽️ Pedido Listo
+        </div>
+        <div class="active-badge" *ngIf="mesa.estado === 'OCUPADA' && !pedidosPorMesa[mesa.id]">
           Pedido Activo
         </div>
       </div>
@@ -52,9 +62,20 @@
         <div class="modal-logo">🍽️</div>
         <div>
           <h3 style="margin: 0;">Mesa {{ mesaSeleccionada.numero }}</h3>
-          <span style="font-size: 13px; color: var(--text-muted);">
-            {{ pedidoActivo?.id ? 'Pedido #' + pedidoActivo.id : 'Generando nuevo pedido...' }}
-          </span>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+            <span style="font-size: 13px; color: var(--text-muted);" *ngIf="pedidoActivo?.id">
+              Pedido #{{ pedidoActivo.id }}
+            </span>
+            <span class="status-pill pending" *ngIf="pedidoActivo?.estado === 'PENDIENTE'">
+              ⏳ Por enviar a cocina
+            </span>
+            <span class="status-pill cooking" *ngIf="pedidoActivo?.estado === 'EN_PREPARACION'">
+              🍳 En preparación en cocina
+            </span>
+            <span class="status-pill ready" *ngIf="pedidoActivo?.estado === 'LISTO'">
+              ✅ Listo para servir
+            </span>
+          </div>
         </div>
       </div>
       <button class="btn-close" (click)="cerrarModal()">×</button>
@@ -86,17 +107,30 @@
       <div class="order-section">
         <h4 class="section-title">Detalle del Pedido</h4>
         <div class="scroll-list order-list" [class.empty]="itemsPedido.length === 0">
-          <div class="order-item" *ngFor="let item of itemsPedido">
-            <div class="order-info">
-              <span class="name">{{ item.menuItem.nombre }}</span>
-              <span class="unit-price">S/ {{ item.precio }} c/u</span>
+          <div class="order-item-card" *ngFor="let item of itemsPedido">
+            <div class="order-item">
+              <div class="order-info">
+                <span class="name">{{ item.menuItem.nombre }}</span>
+                <span class="unit-price">S/ {{ item.precio }} c/u</span>
+              </div>
+              <div class="qty-controls">
+                <button (click)="quitarPlato(item.menuItem)">−</button>
+                <span class="qty">{{ item.cantidad }}</span>
+                <button (click)="agregarPlato(item.menuItem)">+</button>
+              </div>
+              <strong class="subtotal">S/ {{ item.precio * item.cantidad | number:'1.2-2' }}</strong>
             </div>
-            <div class="qty-controls">
-              <button (click)="quitarPlato(item.menuItem)">−</button>
-              <span class="qty">{{ item.cantidad }}</span>
-              <button (click)="agregarPlato(item.menuItem)">+</button>
+
+            <!-- Entrada de nota para cocina -->
+            <div class="item-notes-input-wrapper">
+              <span class="note-icon">📝</span>
+              <input 
+                type="text" 
+                class="item-notes-input" 
+                placeholder="Nota cocina (ej: sin ají, sin ensalada, término medio)..."
+                [ngModel]="item.notas"
+                (ngModelChange)="actualizarNota(item, $event)">
             </div>
-            <strong class="subtotal">S/ {{ item.precio * item.cantidad | number:'1.2-2' }}</strong>
           </div>
           <div class="empty-msg" *ngIf="itemsPedido.length === 0">
              Selecciona platos de la carta para comenzar el pedido.
@@ -117,9 +151,9 @@
           Ticket
         </button>
 
-        <button class="btn btn-primary no-print" (click)="cerrarPedido()" [disabled]="itemsPedido.length === 0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-          Confirmar y Cerrar Mesa
+        <button class="btn btn-primary no-print" (click)="enviarACocina()" [disabled]="itemsPedido.length === 0" style="background: #10b981; border-color: #10b981; display: flex; align-items: center; gap: 8px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          Confirmar y Enviar a Cocina
         </button>
       </div>
     </footer>
@@ -155,7 +189,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of itemsPedido">
-          <td>{{ item.menuItem?.nombre }}</td>
+          <td>
+            {{ item.menuItem?.nombre }}
+            <div *ngIf="item.notas" style="font-size: 10px; font-style: italic; color: #555;">
+              * {{ item.notas }}
+            </div>
+          </td>
           <td align="center">{{ item.cantidad }}</td>
           <td align="right">{{ (item.precio * item.cantidad) | number:'1.2-2' }}</td>
         </tr>

@@ -24,11 +24,22 @@ export class PedidoService {
     });
   }
 
-  agregarItem(pedidoId: number, menuItemId: number, cantidad: number) {
+  agregarItem(pedidoId: number, menuItemId: number, cantidad: number, notas?: string) {
+    const params: any = { menuItemId, cantidad };
+    if (notas !== undefined && notas !== null) {
+      params.notas = notas;
+    }
     return this.http.post<any>(
       `${this.apiUrl}/${pedidoId}/items`,
       null,
-      { params: { menuItemId, cantidad } }
+      { params }
+    );
+  }
+
+  actualizarNotas(detalleId: number, notas: string) {
+    return this.http.put<any>(
+      `${this.apiUrl}/detalles/${detalleId}/notas`,
+      notas
     );
   }
 

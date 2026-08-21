@@ -27,6 +27,8 @@ export class MesasComponent implements OnInit {
   platos: any[] = [];
   itemsPedido: any[] = [];
 
+  pedidosPorMesa: { [key: number]: any } = {};
+
   nuevaMesa: Partial<Mesa> = {
     numero: 0,
     estado: 'LIBRE'
@@ -58,6 +60,24 @@ export class MesasComponent implements OnInit {
   cargarMesas() {
     this.mesaService.listar().subscribe(data => {
       this.mesas = data;
+      this.cargarEstadosPedidosMesas();
+    });
+  }
+
+  cargarEstadosPedidosMesas() {
+    this.pedidosPorMesa = {};
+    const estados = ['PENDIENTE', 'EN_PREPARACION', 'LISTO'];
+    estados.forEach(estado => {
+      this.pedidoService.pedidosPorEstado(estado).subscribe({
+        next: pedidos => {
+          pedidos.forEach(p => {
+            if (p.mesa) {
+              this.pedidosPorMesa[p.mesa.id] = p;
+            }
+          });
+        },
+        error: err => console.error(`Error cargando pedidos ${estado}`, err)
+      });
     });
   }
 
@@ -96,7 +116,6 @@ export class MesasComponent implements OnInit {
   }
 
   abrirPedido(mesa: Mesa) {
-
     this.mesaSeleccionada = mesa;
     this.itemsPedido = [];
 
@@ -118,8 +137,6 @@ export class MesasComponent implements OnInit {
       });
   }
 
-
-
   cargarPlatos() {
     this.menuService.listarDisponibles().subscribe({
       next: data => {
@@ -132,7 +149,6 @@ export class MesasComponent implements OnInit {
   }
 
   agregarPlato(plato: any) {
-
     if (!this.mesaSeleccionada) return;
 
     if (!this.pedidoActivo) {
@@ -151,14 +167,6 @@ export class MesasComponent implements OnInit {
           this.pedidoActivo = pedido;
           this.cargarItemsPedido();
           this.cargarMesas();
-          
-          // ASEGURAR VISIBILIDAD EN COCINA:
-          this.pedidoService.cambiarEstado(pedido.id, 'EN_PREPARACION').subscribe({
-            next: () => {
-              this.pedidoActivo.estado = 'EN_PREPARACION';
-              this.cargarMesas();
-            }
-          });
         },
         error: err => {
           alert(err.error?.message || 'Error al crear pedido');
@@ -174,14 +182,7 @@ export class MesasComponent implements OnInit {
       1
     ).subscribe(() => {
       this.cargarItemsPedido();
-      
-      this.pedidoService.cambiarEstado(this.pedidoActivo.id, 'EN_PREPARACION').subscribe({
-        next: () => {
-          this.pedidoActivo.estado = 'EN_PREPARACION';
-          this.cargarMesas(); 
-        },
-        error: () => this.cargarMesas()
-      });
+      this.cargarMesas();
     });
   }
 
@@ -215,15 +216,42 @@ export class MesasComponent implements OnInit {
     });
   }
 
- cerrarPedido() {
-  if (!this.pedidoActivo || this.itemsPedido.length === 0) return;
+  actualizarNota(item: any, nota: string) {
+    item.notas = nota;
+    if (item.id) {
+      this.pedidoService.actualizarNotas(item.id, nota).subscribe({
+        error: err => console.error('Error guardando nota', err)
+      });
+    }
+  }
 
-  this.pedidoService.cerrarPedido(this.pedidoActivo.id).subscribe(() => {
-    this.pedidoActivo = null;
-    this.cerrarModal();
-    this.cargarMesas();
-  });
-}
+  enviarACocina() {
+    if (!this.pedidoActivo || this.itemsPedido.length === 0) return;
+
+    this.pedidoService.cambiarEstado(this.pedidoActivo.id, 'EN_PREPARACION').subscribe({
+      next: () => {
+        this.cerrarModal();
+        this.cargarMesas();
+      },
+      error: err => {
+        console.error('Error al enviar a cocina', err);
+        this.cerrarModal();
+        this.cargarMesas();
+      }
+    });
+  }
+
+  cerrarPedido() {
+    if (!this.pedidoActivo || this.itemsPedido.length === 0) return;
+
+    if (!confirm('¿Deseas cerrar y liberar la mesa?')) return;
+
+    this.pedidoService.cerrarPedido(this.pedidoActivo.id).subscribe(() => {
+      this.pedidoActivo = null;
+      this.cerrarModal();
+      this.cargarMesas();
+    });
+  }
 
 
   cerrarModal() {
