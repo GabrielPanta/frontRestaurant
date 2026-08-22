@@ -1,26 +1,78 @@
 <div class="estadisticas">
   <header class="header">
     <div class="title-area">
-      <h1>Panel de Inteligencia</h1>
-      <p class="subtitle">Análisis operativo en tiempo real</p>
+      <h1>Panel de Inteligencia & Ventas</h1>
+      <p class="subtitle">Análisis financiero y métricas de desempeño por fechas</p>
     </div>
     <div class="header-actions">
-      <div class="status-indicator">
-        <span class="pulse"></span>
-        Actualizado: {{ today | date:'shortTime' }}
+      <div class="status-badge" [class.loading]="loading">
+        <span class="pulse" *ngIf="!loading"></span>
+        <span class="spinner" *ngIf="loading"></span>
+        <span>{{ loading ? 'Actualizando datos...' : 'Período: ' + fechaInicio + ' al ' + fechaFin }}</span>
       </div>
     </div>
   </header>
 
+  <!-- BARRA DE FILTROS POR FECHA -->
+  <section class="filter-card">
+    <div class="preset-buttons">
+      <button type="button" class="preset-btn" [class.active]="filtroActivo === 'hoy'" (click)="aplicarPreset('hoy')">
+        Hoy
+      </button>
+      <button type="button" class="preset-btn" [class.active]="filtroActivo === 'ayer'" (click)="aplicarPreset('ayer')">
+        Ayer
+      </button>
+      <button type="button" class="preset-btn" [class.active]="filtroActivo === '7dias'" (click)="aplicarPreset('7dias')">
+        Últimos 7 días
+      </button>
+      <button type="button" class="preset-btn" [class.active]="filtroActivo === 'mes'" (click)="aplicarPreset('mes')">
+        Este Mes
+      </button>
+    </div>
+
+    <div class="custom-range-form">
+      <div class="date-input-group">
+        <label for="fechaInicio">Desde:</label>
+        <input 
+          type="date" 
+          id="fechaInicio" 
+          [(ngModel)]="fechaInicio" 
+          (change)="onCustomDateChange()" 
+          class="date-input" 
+        />
+      </div>
+
+      <div class="date-input-group">
+        <label for="fechaFin">Hasta:</label>
+        <input 
+          type="date" 
+          id="fechaFin" 
+          [(ngModel)]="fechaFin" 
+          (change)="onCustomDateChange()" 
+          class="date-input" 
+        />
+      </div>
+
+      <button type="button" class="btn-filter" (click)="consultar()" [disabled]="loading">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        Buscar
+      </button>
+    </div>
+  </section>
+
+  <!-- TARJETAS DE RESUMEN / MÉTRICAS -->
   <div class="stats-grid">
     <div class="stat-card sales">
       <div class="card-bg-icon">💰</div>
       <div class="stat-content">
-        <span class="label">Ventas Brutas</span>
-        <h2 class="value">S/ {{ totalVentasHoy | number:'1.2-2' }}</h2>
+        <span class="label">Ventas Totales</span>
+        <h2 class="value">S/ {{ totalVentas | number:'1.2-2' }}</h2>
         <div class="trend positive">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg>
-          <span>12.5%</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+          <span>Ingresos en el rango</span>
         </div>
       </div>
     </div>
@@ -28,10 +80,10 @@
     <div class="stat-card orders">
       <div class="card-bg-icon">📋</div>
       <div class="stat-content">
-        <span class="label">Volumen de Pedidos</span>
+        <span class="label">Pedidos Cobrados</span>
         <h2 class="value">{{ cantidadPedidos }}</h2>
         <div class="trend neutral">
-          <span>Promedio estable</span>
+          <span>{{ cantidadPedidos > 0 ? (cantidadPedidos + ' transacciones cerradas') : 'Sin pedidos cerrados' }}</span>
         </div>
       </div>
     </div>
@@ -43,32 +95,91 @@
         <h2 class="value">S/ {{ ticketPromedio | number:'1.2-2' }}</h2>
         <div class="trend positive">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path></svg>
-          <span>4.2%</span>
+          <span>Consumo por orden</span>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- GRÁFICO DE EVOLUCIÓN EN EL TIEMPO (LÍNEA) -->
+  <div class="dashboard-card timeline-card" *ngIf="serieTemporal.length > 1">
+    <div class="card-header">
+      <div>
+        <h3>Evolución de Ventas Diarias</h3>
+        <p class="card-subtitle">Comportamiento de la facturación día a día</p>
+      </div>
+      <span class="badge">{{ serieTemporal.length }} días registrados</span>
+    </div>
+    <div class="chart-wrapper-tall">
+      <canvas #timelineChart></canvas>
+    </div>
+  </div>
+
+  <!-- LAYOUT DE GRÁFICOS Y TABLA DE PRODUCTOS -->
   <div class="charts-layout">
     <div class="main-chart dashboard-card">
       <div class="card-header">
-        <h3>Ranking de Productos</h3>
-        <span class="badge">Top 5</span>
+        <div>
+          <h3>Ranking de Productos Más Vendidos</h3>
+          <p class="card-subtitle">Unidades comercializadas en el período</p>
+        </div>
+        <span class="badge">Top {{ productos.length }}</span>
       </div>
-      <div class="chart-wrapper">
+      <div class="chart-wrapper" *ngIf="productos.length > 0">
         <canvas #prodChart></canvas>
+      </div>
+      <div class="empty-state" *ngIf="productos.length === 0 && !loading">
+        <p>No se encontraron productos vendidos en este rango de fechas.</p>
       </div>
     </div>
 
     <div class="side-charts">
       <div class="donut-card dashboard-card">
         <div class="card-header">
-          <h3>Distribución</h3>
+          <div>
+            <h3>Distribución de Ventas</h3>
+            <p class="card-subtitle">Participación por producto</p>
+          </div>
         </div>
-        <div class="chart-wrapper">
+        <div class="chart-wrapper" *ngIf="productos.length > 0">
           <canvas #donutChart></canvas>
         </div>
+        <div class="empty-state" *ngIf="productos.length === 0 && !loading">
+          <p>Sin datos</p>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- TABLA DETALLE DE PRODUCTOS VENDIDOS -->
+  <div class="dashboard-card table-card" *ngIf="productos.length > 0">
+    <div class="card-header">
+      <div>
+        <h3>Detalle de Unidades Vendidas</h3>
+        <p class="card-subtitle">Desglose por artículo</p>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Producto</th>
+            <th class="text-right">Cantidad Vendida</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prod of productos; let i = index">
+            <td>
+              <span class="rank-circle">{{ i + 1 }}</span>
+            </td>
+            <td class="font-medium">{{ prod.nombre }}</td>
+            <td class="text-right">
+              <span class="quantity-tag">{{ prod.cantidad }} und.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
